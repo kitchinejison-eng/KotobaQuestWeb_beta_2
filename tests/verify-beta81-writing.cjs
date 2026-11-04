@@ -1,0 +1,27 @@
+// Compatibility check: beta8.3 replaces manual/undetermined writing with actual recognition.
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const root = path.resolve(__dirname, '..');
+const read = filename => fs.readFileSync(path.join(root,filename), 'utf8');
+const logic=read('v47-improvements.js'),app=read('app.js');
+const html=read('index.html'),cache=read('service-worker.js');
+new vm.Script(logic);new vm.Script(app);
+assert(html.includes('v47-improvements.js?v=beta85-scene-quiz'));
+assert(html.includes('app.js?v=beta85-scene-quiz'));
+assert(cache.includes('kotoba-quest-beta85-scene-quiz'));
+assert(!logic.includes('練習として次へ（採点保留）'));
+assert(!logic.includes('書いた文字を確認・判定する'));
+assert(!app.includes('写字練習（採点なし）'));
+assert(logic.includes('typeof window.KotobaNativeBridge.recognizeHandwriting'));
+assert(logic.includes('recognizeWithBrowser'));
+assert(logic.includes('copyRecognitionEvidenceV84(reading,target.join'));
+assert(logic.includes('if(match||attempts>=3)'));
+assert(logic.includes('stats.firstTryCorrect++;score++'));
+assert(logic.includes('stats.afterRetryCorrect++'));
+assert(logic.includes('stats.incorrect++'));
+assert(app.includes('total: questions.length'));
+assert(app.includes('writing: writingStats'));
+assert(app.includes('写字初回正解') && app.includes('写字3回不一致'));
+console.log('PASS: beta8.3 handwriting real recognition, graded records, 3 attempts and cache.');

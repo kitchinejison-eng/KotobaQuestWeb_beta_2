@@ -1,0 +1,30 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const root=path.resolve(__dirname,'..');
+const logic=fs.readFileSync(path.join(root,'v47-improvements.js'),'utf8');
+const siblingJava=path.join(root,'..','kotoba-android-beta8-4','app/src/main/java/jp/co/aristoteles/kotobaquest/NativeInkRecognizer.java');
+const embeddedJava=path.join(root,'..','..','java/jp/co/aristoteles/kotobaquest/NativeInkRecognizer.java');
+const java=fs.readFileSync(fs.existsSync(siblingJava)?siblingJava:embeddedJava,'utf8');
+const bridge=fs.readFileSync(path.join(root,'android-bridge-android.js'),'utf8');
+const start=logic.indexOf('function copyRecognitionEvidenceV84(');
+const end=logic.indexOf('function renderCopyV47(',start);
+assert(start>0&&end>start,'Evidence-based comparison function is missing');
+const context={Array,String};vm.createContext(context);vm.runInContext(logic.slice(start,end),context);
+const judge=context.copyRecognitionEvidenceV84;
+// The visible character match alone is sufficient; no word model required.
+assert.equal(judge({texts:['学','校'],cellCandidates:[['学'],['校']],phraseCandidates:[]},'学校').matched,true);
+// The contextual pass must not automatically force a target match.
+assert.equal(judge({texts:['学','雨'],cellCandidates:[['学'],['雨','雲']],phraseCandidates:['学校']},'学校').matched,false);
+assert.equal(judge({texts:['学','雨'],cellCandidates:[['学'],['雨','校']],phraseCandidates:['学校']},'学校').matched,true);
+assert.equal(judge({texts:['学','雨'],cellCandidates:[['学','校'],['雨','校']],phraseCandidates:['学校']},'学校').method,'word-context');
+assert.equal(judge({texts:['雨'],cellCandidates:[['雨','山']],phraseCandidates:['山']},'山').matched,false,'Single character must match top recognition');
+assert.equal(judge({texts:['学','雨','山'],cellCandidates:[['学'],['雨','校'],['山','海']],phraseCandidates:['学校海']},'学校海').matched,false,'Multiple ambiguous characters must not pass');
+assert.equal(judge({texts:['学','校'],cellCandidates:[['学'],['校']],phraseCandidates:['学校']},'学校大学'),null,'Wrong character count must be rejected');
+assert(logic.includes('length>=40&&Math.max(maxX-minX,maxY-minY)>=32'),'Reject tiny marks rather than crediting ink-only');
+assert(java.includes('recognizeWhole('),'Android must recognize a complete word independently');
+assert(java.includes('cellCandidates')&&java.includes('phraseCandidates'),'Native API should return real alternatives');
+assert(java.includes('280f * c'),'Whole word must preserve original character order');
+assert(bridge.includes('pending.resolve(result)'),'Bridge must retain evidence arrays');
+console.log('PASS: beta8.4 dual-pass Japanese writing recognition, ambiguity safeguards, and native bridge.');
