@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="300" viewBox="0 0 300 190" role="img" aria-label="動作のイラスト">
+<rect width="300" height="190" rx="18" fill="#fff4e8"/>
+<circle cx="150" cy="87" r="70" fill="#ffffff" opacity=".55"/>
+<!-- legs and shoes -->
+<path d="M139 145 L130 171 Q127 178 117 178 L108 178" stroke="#39506b" stroke-width="10" stroke-linecap="round" fill="none"/>
+<path d="M177 145 L187 171 Q190 178 200 178 L208 178" stroke="#39506b" stroke-width="10" stroke-linecap="round" fill="none"/>
+<!-- body -->
+<path d="M132 87 Q151 77 176 87 L188 146 L122 146 Z" fill="#70bde7" stroke="#32688e" stroke-width="3"/>
+<!-- face and hair -->
+<circle cx="154" cy="52" r="27" fill="#f2c6a4" stroke="#8f6651" stroke-width="3"/>
+<path d="M128 49 Q124 20 154 21 Q181 19 182 48 L171 39 L140 40 Z" fill="#514239"/>
+<circle cx="146" cy="52" r="2.8" fill="#43352d"/><circle cx="164" cy="52" r="2.8" fill="#43352d"/>
+<path d="M146 64 Q155 70 164 63" stroke="#b76b62" stroke-width="3" stroke-linecap="round" fill="none"/>
+<!-- movement arms -->
+<g stroke="#f2c6a4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M142 103 Q117 85 122 54 Q124 38 134 36"/><path d="M134 36 L126 25 M134 36 L136 20 M134 36 L145 25"/><path d="M188 103 L207 132"/></g>
+<!-- hands -->
+<circle cx="134" cy="36" r="7" fill="#f2c6a4" stroke="#8f6651" stroke-width="2"/>
+<path d="M219 34 Q230 25 239 34 M224 24 Q238 15 250 26" fill="none" stroke="#70b8e3" stroke-width="4" stroke-linecap="round"/>
+
+</svg>
