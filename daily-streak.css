@@ -1,0 +1,47 @@
+.daily-streak-slot{width:100%;margin:18px auto}
+.daily-streak-banner{display:flex;align-items:center;gap:16px;max-width:640px;margin:auto;padding:18px 20px;border:2px solid #a6d9bf;border-radius:20px;background:linear-gradient(135deg,#effff6,#fff0f7);box-shadow:0 5px 18px rgba(32,111,72,.15);color:#18573d;text-align:left;text-shadow:none}
+.daily-streak-pictogram{position:relative;flex:none;width:75px;height:100px;display:flex;align-items:center;justify-content:center;color:#111816}
+.daily-streak-hero{display:block;width:100%;height:100%;overflow:visible;color:inherit}
+.daily-streak-blossom{position:absolute;right:-5px;bottom:4px;font-size:25px;filter:drop-shadow(0 2px 3px #aa61843a)}
+.daily-streak-copy{min-width:0;flex:1}.daily-streak-heading{display:block;font-size:clamp(17px,3.5vw,23px);line-height:1.3;font-weight:900;color:#176b48}
+.daily-streak-count{font-size:clamp(25px,5vw,36px);font-weight:1000;line-height:1.4;color:#248552}
+.daily-streak-message{margin:4px 0 6px!important;font-size:clamp(12px,2.9vw,15px)!important;line-height:1.5!important;color:#18573d!important}
+.daily-streak-best{font-size:12px;color:#3a785b}
+#dailyStreakHomeBadge{display:block;width:fit-content;max-width:100%;margin:10px auto;padding:8px 14px;border-radius:999px;background:#f0fff6;border:1px solid #b4ddc9;color:#176940;font-weight:900;font-size:clamp(12px,3vw,15px);text-align:center}
+.records-streak-panel{margin:0 0 18px;padding:16px;border:2px solid #afdcc3;border-radius:19px;background:linear-gradient(135deg,#f0fff6,#fff0f7);color:#285b46}
+.records-streak-title{font-size:clamp(18px,4vw,24px);font-weight:900;color:#176b48;line-height:1.45}.records-streak-title small{display:block;font-size:12px;color:#416c56;font-weight:700}
+.records-streak-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px}
+.records-streak-stats>div{padding:12px 6px 10px;border-radius:13px;background:#fff;border:1px solid #bce2cf;text-align:center}
+.records-streak-stats strong{display:block;color:#228652;font-size:clamp(19px,4.5vw,29px);font-weight:900;white-space:nowrap}
+.records-streak-stats span{display:block;margin-top:4px;color:#496e5b;font-size:clamp(10px,2.6vw,12px);font-weight:800}
+.records-streak-notice{margin:12px 0 0!important;font-size:13px!important;line-height:1.6!important;color:#285b46!important}
+.records-streak-preview{display:block;width:100%;min-height:46px;margin-top:12px;padding:10px;border:2px solid #81c6a2;border-radius:12px;background:#fff;color:#176540;font-size:14px;font-weight:900;cursor:pointer}
+.records-streak-preview:focus-visible{outline:3px solid #e89bbe;outline-offset:2px}
+.records-calendar-legend{font-size:12px;color:#6d6870;line-height:1.6;margin:8px 0 14px}
+.calendar-day.has-streak{background:#fff1f7;border-color:#e1a8c6}
+.calendar-day.selected.has-streak{box-shadow:0 0 0 3px rgba(23,94,191,.26);border-color:#1976d2}
+.calendar-day .day-streak-flower{position:absolute;top:1px;right:1px;font-size:17px;line-height:1;pointer-events:none}
+.record-day-streak{margin:8px 0;padding:11px 13px;border-radius:12px;background:#eefcf3;color:#176943;font-size:14px;font-weight:900}
+.records-clear-note{margin:6px 0 0;color:#7b8592;font-size:12px;line-height:1.5}
+@media(max-width:400px){.daily-streak-banner{padding:12px;gap:10px}.daily-streak-pictogram{width:58px;height:82px}}
+@media(max-width:400px){.records-streak-panel{padding:11px}.records-streak-stats{gap:5px}.records-streak-stats>div{padding:10px 2px}.calendar-day .day-streak-flower{font-size:14px}}
+
+/* First completion of the day: a short cheering pictogram with falling flowers. */
+.daily-streak-celebration{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,32,23,.83);opacity:0;transition:opacity .22s ease;touch-action:manipulation}
+.daily-streak-celebration.is-visible{opacity:1}
+.daily-streak-celebration-card{position:relative;isolation:isolate;width:min(470px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;padding:20px 22px 25px;border:3px solid #b3e5c9;border-radius:26px;background:linear-gradient(160deg,#f2fff7 0%,#fff0f6 100%);box-shadow:0 22px 70px #001b0f88;color:#15593b;text-align:center;transform:translateY(24px) scale(.92);transition:transform .35s cubic-bezier(.2,1.4,.5,1)}
+.daily-streak-celebration.is-visible .daily-streak-celebration-card{transform:translateY(0) scale(1)}
+.daily-streak-celebration-hero{position:relative;z-index:1;width:130px;height:155px;margin:0 auto 4px;color:#101715;animation:dailyStreakJump .75s ease-in-out 3}
+.daily-streak-celebration-hero .daily-streak-raised-arm{transform-box:view-box;transform-origin:94px 77px;animation:dailyStreakPump .48s ease-in-out 4 alternate}
+.daily-streak-celebration-kicker{position:relative;z-index:1;font-size:14px;font-weight:900;letter-spacing:.06em;color:#247c54}
+.daily-streak-celebration-title{position:relative;z-index:1;margin:8px 0 12px;font-size:clamp(27px,7vw,38px);line-height:1.25;font-weight:1000;color:#177849}
+.daily-streak-celebration-note{position:relative;z-index:1;margin:0 auto 18px;font-size:clamp(14px,3.3vw,17px);font-weight:700;line-height:1.6;color:#376a4e}
+.daily-streak-celebration-close{position:relative;z-index:1;display:block;width:100%;min-height:54px;padding:12px 18px;border:0;border-radius:15px;background:#218753;color:white;font-size:18px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.daily-streak-celebration-close:focus-visible{outline:3px solid #e696bd;outline-offset:3px}
+.daily-streak-petals{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.daily-streak-petals span{position:absolute;top:-30px;font-size:28px;opacity:0;animation:dailyStreakPetalFall 2.4s ease-in-out forwards}
+.daily-streak-petals span:nth-child(1){left:9%;animation-delay:0s}.daily-streak-petals span:nth-child(2){left:27%;animation-delay:.22s}.daily-streak-petals span:nth-child(3){left:44%;animation-delay:.07s}.daily-streak-petals span:nth-child(4){left:61%;animation-delay:.4s}.daily-streak-petals span:nth-child(5){left:79%;animation-delay:.12s}.daily-streak-petals span:nth-child(6){left:92%;animation-delay:.31s}
+@keyframes dailyStreakJump{0%,100%{transform:translateY(0)}40%{transform:translateY(-18px)}75%{transform:translateY(4px)}}
+@keyframes dailyStreakPump{from{transform:rotate(0deg)}to{transform:rotate(-17deg)}}
+@keyframes dailyStreakPetalFall{0%{transform:translateY(-18px) rotate(-30deg);opacity:0}12%{opacity:1}85%{opacity:1}100%{transform:translateY(330px) rotate(320deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.daily-streak-celebration,.daily-streak-celebration-card{transition:none}.daily-streak-celebration-hero,.daily-streak-celebration-hero .daily-streak-raised-arm,.daily-streak-petals span{animation:none}}

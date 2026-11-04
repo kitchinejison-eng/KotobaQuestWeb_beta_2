@@ -1,0 +1,125 @@
+/* Ver_beta_6: phone-first articulation layout and tablet microphone card stability.
+   All 3D-only responsive changes live in pictogram-3d.html.
+   Do not change the base desktop layout or the tablet's three-column navigation. */
+
+/* On portrait tablets the two microphone cards should size to their content,
+   rather than stretching a short 'listen' card to the height of the mic card. */
+@media (min-width:481px) and (max-width:950px) and (orientation:portrait) {
+  .artnav-v1-voice-slot .foundation-voice-panel {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+    gap:12px;
+  }
+  .artnav-v1-voice-slot .voice-read-action-card,
+  .artnav-v1-voice-slot .voice-read-result-card {
+    min-width:0;
+    height:auto;
+  }
+  .artnav-v1-voice-slot .voice-read-mic-area,
+  .artnav-v1-voice-slot .voice-read-action-head {
+    min-width:0;
+  }
+  .artnav-v1-voice-slot .voice-read-example-btn,
+  .artnav-v1-voice-slot .voice-read-mic-button,
+  .artnav-v1-voice-slot .voice-read-check-button {
+    width:100%;
+    overflow-wrap:anywhere;
+  }
+}
+
+/* Narrow phone screens: preserve the question flow, but make each microphone
+   control full-width and readable without side-by-side compression. */
+@media (max-width:480px) and (orientation:portrait) {
+  #game.articulation-nav-mode #answerArea,
+  #game.articulation-nav-mode .artnav-v1 { min-width:0; width:100%; }
+  .artnav-v1-banner {
+    min-height:0;
+    padding:14px 9px 11px;
+    border-radius:18px 18px 10px 10px;
+    gap:6px;
+  }
+  .artnav-v1-quest { position:static; padding:5px 10px; font-size:11px; box-shadow:none; }
+  .artnav-v1-banner h2 { font-size:21px; line-height:1.25; margin:4px 0; }
+  .artnav-v1-banner p { font-size:12px; line-height:1.45; }
+  .artnav-v1-grid { grid-template-columns:minmax(0,1fr); gap:8px; margin-top:8px; }
+  .artnav-v1-groups,.artnav-v1-middle,.artnav-v1-practice {
+    padding:9px;
+    border-radius:16px;
+  }
+  .artnav-v1 h3 { font-size:17px; line-height:1.3; margin-bottom:6px; }
+  .artnav-v1-groups h3 { padding:6px; }
+  .artnav-v4-current-card { min-height:68px; gap:6px; padding:7px; }
+  .artnav-v4-current-icon { width:46px; height:46px; font-size:25px; }
+  .artnav-v4-current-card strong { font-size:19px; }
+  .artnav-v4-guide-description { margin:4px 0; font-size:13px; line-height:1.45; }
+  .artnav-v4-guide-tip { margin:4px 0 0; padding:7px 9px; line-height:1.45; }
+  .artnav-v1-diagram { padding:2px; }
+  .artnav-v1-part-label { font-size:9px; padding:2px 4px; }
+  .artnav-v1-action,.artnav-v1-guide { margin:7px 0 3px; font-size:13px; line-height:1.45; }
+  .artnav-v1-practice>h3 { padding:8px; margin:0 0 7px; }
+  .artnav-v1-flow-label { font-size:12px; padding:3px 0 5px; }
+  .artnav-v1-sound { min-height:49px; padding:4px 1px; font-size:24px; border-radius:10px; }
+  .artnav-v1-target { padding:7px 5px; margin:8px 0 7px; font-size:16px; }
+  .artnav-v1-voice-slot .foundation-voice-panel {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    align-items:start;
+    gap:8px;
+    width:100%;
+  }
+  .artnav-v1-voice-slot .voice-read-action-card,
+  .artnav-v1-voice-slot .voice-read-result-card {
+    min-width:0;
+    height:auto;
+    margin:0;
+    padding:10px;
+  }
+  .artnav-v1-voice-slot .voice-read-action-head { min-width:0; margin-bottom:7px; }
+  .artnav-v1-voice-slot .voice-read-action-head strong {
+    font-size:15px;
+    overflow-wrap:anywhere;
+  }
+  .artnav-v1-voice-slot .voice-read-mic-area {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:8px;
+  }
+  .artnav-v1-voice-slot .voice-read-example-btn,
+  .artnav-v1-voice-slot .voice-read-mic-button,
+  .artnav-v1-voice-slot .voice-read-check-button {
+    width:100%;
+    min-width:0;
+    min-height:56px;
+    padding:10px 12px;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+  }
+  .artnav-v1-voice-slot .voice-read-mic-main { font-size:18px; }
+  .artnav-v1-voice-slot .voice-read-check-button { min-height:48px; font-size:14px; }
+  .artnav-v1-voice-slot .voice-read-status,
+  .artnav-v1-voice-slot .voice-read-mic-detail,
+  .artnav-v1-voice-slot .voice-read-transcript {
+    min-width:0;
+    overflow-wrap:anywhere;
+    word-break:normal;
+    line-height:1.55;
+  }
+  .artnav-v4-auto-notice { padding:9px; min-height:44px; }
+  .artnav-v1-skip { min-height:48px; }
+  .artnav-v1-footnote { font-size:11px; line-height:1.55; }
+}
+
+/* Short landscape phones also need a single-column mic, but tablet landscape
+   screens continue to use the established layout. */
+@media (orientation:landscape) and (max-height:480px) and (max-width:950px) and (pointer:coarse) {
+  .artnav-v1-voice-slot .foundation-voice-panel {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    align-items:start;
+    gap:8px;
+  }
+  .artnav-v1-voice-slot .voice-read-action-card,
+  .artnav-v1-voice-slot .voice-read-result-card { height:auto; margin-top:6px; }
+  .artnav-v1-voice-slot .voice-read-mic-button,
+  .artnav-v1-voice-slot .voice-read-example-btn { width:100%; min-height:48px; }
+}

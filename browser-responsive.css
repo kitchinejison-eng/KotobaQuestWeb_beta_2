@@ -1,0 +1,56 @@
+/* ことばクエスト ブラウザ版：PC・タブレット・スマートフォン共通調整 */
+:root {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+html, body { min-height: 100%; max-width: 100%; }
+body { overflow-x: clip; }
+img, svg, video, canvas { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+button, [role="button"], select, input[type="checkbox"], input[type="radio"] { touch-action: manipulation; }
+button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 3px solid #205fb8;
+  outline-offset: 3px;
+}
+input, textarea, select { max-width: 100%; }
+textarea { resize: vertical; }
+/* PCや横長タブレットでは視線移動が大きくならないように本文幅を制限 */
+@media (min-width: 1200px) {
+  .app { max-width: 1120px; }
+  .community-screen { max-width: 980px; }
+  .kd-app { max-width: 1120px; }
+}
+/* 縦向きスマートフォン：読みやすい文字・1列を基本にする */
+@media (max-width: 600px) and (orientation: portrait) {
+  .screen-head-title { font-size: clamp(17px, 4.5vw, 22px); }
+  .screen-head { gap: 6px; }
+  .question-label, .prompt-text, .kd-question-prompt { overflow-wrap: anywhere; }
+  .community-post-body, .community-intro p { overflow-wrap: anywhere; }
+}
+/* 横向きスマートフォン：高さを有効活用 */
+@media (orientation: landscape) and (max-height: 650px) {
+  .app { padding-top: 6px; padding-bottom: 12px; }
+  .screen-head { min-height: 46px; margin-bottom: 6px; }
+  .back-button, .head-icon-button { min-height: 42px; height: 42px; width: 44px; }
+  .quiz-card, #game .quiz-card { padding-top: 12px; padding-bottom: 12px; }
+  .visual-area { height: min(24vh, 170px); }
+  .emoji { font-size: clamp(45px, 12vh, 82px); }
+  .prompt-text { margin-top: 6px; margin-bottom: 8px; padding: 10px 14px; }
+  .community-screen-head { min-height: 44px; }
+  .kd-topbar { padding-top: 4px; padding-bottom: 4px; }
+  .kd-question-visual { max-height: 24vh; }
+}
+/* タブレット・PC：選択肢やカードを横に並べ、画面の広さを活用 */
+@media (min-width: 760px) and (orientation: landscape) {
+  .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .answer-area { width: 100%; }
+  .rm-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .community-panel, .community-post-card, .community-safety-note { margin-left: auto; margin-right: auto; }
+}
+/* キーボード操作や動きを抑えたい方にも配慮 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

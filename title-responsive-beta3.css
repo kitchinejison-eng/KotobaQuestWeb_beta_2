@@ -1,0 +1,112 @@
+/* KotobaQuest Ver_beta_3 title: reference-inspired responsive home screen.
+   This file loads last to avoid conflicting with the existing quiz / game UI. */
+body.title-home-mode{background:#eaf5ff}
+body.title-home-mode .app{max-width:none;width:100%;padding:0}
+
+#titleScreen.title-screen{max-width:none;border:0;border-radius:0;isolation:isolate;background:linear-gradient(135deg,#f8fbff 0%,#ebf5ff 60%,#f8fbff 100%)}
+#titleScreen.title-screen.active{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:16px;min-height:100svh;min-height:100dvh;padding:clamp(16px,3.1vw,44px) clamp(15px,3vw,54px) calc(19px + env(safe-area-inset-bottom));overflow-x:hidden;overflow-y:auto}
+#titleScreen .title-bubble-field{z-index:-1;inset:0}
+#titleScreen .title-bubble-field::before{inset:-8%;opacity:.57;background-image:radial-gradient(circle,rgba(116,178,235,.27) 0 5px,transparent 5.5px);background-size:68px 68px;animation:titleDotDrift 24s linear infinite}
+#titleScreen .title-bubble-field::after{inset:0;opacity:.38;background:radial-gradient(circle at 9% 30%,#d9edff 0,transparent 21%),radial-gradient(circle at 82% 78%,#d9ecff 0,transparent 23%);animation:titleGlowDrift 25s ease-in-out infinite alternate}
+#titleScreen .title-bubble{opacity:.72;background:radial-gradient(circle at 28% 23%,#fff 0 13%,#effaff 27%,rgba(131,187,238,.32) 55%,rgba(115,187,255,.04) 73%);filter:drop-shadow(0 4px 15px rgba(113,178,231,.16))}
+
+#titleScreen .title-layout{display:grid;grid-template-columns:minmax(255px,.95fr) minmax(560px,1.95fr);align-items:center;gap:clamp(20px,3.4vw,54px);width:100%;max-width:1510px;margin:auto auto 0}
+#titleScreen .title-identity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(11px,1.75vw,25px);min-width:0;text-align:center}
+#titleScreen .title-brand{grid-column:auto;grid-row:auto;min-height:46px;padding:9px 26px;border:2px solid #d0e3f7;border-radius:999px;background:#fff;color:#114a99;font-size:clamp(16px,1.6vw,23px);letter-spacing:.03em;box-shadow:0 7px 15px rgba(40,115,190,.14)}
+#titleScreen .title-logo-wrap{grid-column:auto;grid-row:auto;align-self:center;width:clamp(155px,18vw,264px);height:auto;min-height:0;aspect-ratio:1;padding:8px;margin:4px auto 0;border-radius:34%;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(222,244,255,.9));box-shadow:0 12px 40px rgba(25,111,216,.12)}
+#titleScreen .title-mark{width:90%;height:auto;aspect-ratio:1;border:5px solid rgba(255,255,255,.97);border-radius:34% 39% 38% 40%;background:linear-gradient(155deg,#069af0 0%,#0072e1 66%,#096cd5 100%);box-shadow:0 12px 18px rgba(32,109,211,.22);transform:rotate(-2deg)}
+#titleScreen .title-mark::after{background:#0679e4;right:-8px;bottom:6%}
+#titleScreen .title-mark-letter{font-size:clamp(76px,10vw,132px);text-shadow:0 5px 2px rgba(0,68,145,.16)}
+#titleScreen .title-mark-spark{font-size:clamp(22px,2.6vw,36px);text-shadow:0 0 7px #fff}
+#titleScreen .title-mark-dot.dot-a{width:13px;height:13px}
+#titleScreen .title-mark-dot.dot-b{width:18px;height:18px}
+#titleScreen .title-mark-dot.dot-c{width:11px;height:11px}
+#titleScreen .title-name{grid-column:auto;grid-row:auto;align-self:center;margin:0;white-space:nowrap;font-size:clamp(34px,3.5vw,58px);line-height:1.12;letter-spacing:-.065em;color:#0750a5;text-shadow:0 3px 0 rgba(255,255,255,.75)}
+#titleScreen .title-name span{color:#ffab05}
+#titleScreen .title-dev-badge{display:none}
+#titleScreen .title-sub{grid-column:auto;grid-row:auto;align-self:center;margin:0;color:#52708e;font-size:clamp(13px,1.25vw,20px);font-weight:800;white-space:normal}
+#titleScreen #dailyStreakHomeBadge{max-width:100%;margin:0 auto;font-size:clamp(11px,1vw,14px)}
+
+#titleScreen .title-actions{min-width:0;width:100%;align-self:center}
+#titleScreen .title-menu{grid-column:auto;grid-row:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:none;gap:clamp(9px,1.2vw,17px);margin:0}
+#titleScreen .title-menu .menu-button{position:relative;display:grid;grid-template-columns:clamp(54px,5.6vw,78px) minmax(0,1fr) 25px;align-items:center;gap:clamp(9px,1vw,15px);width:100%;min-width:0;min-height:clamp(112px,10.9vw,157px);margin:0;padding:clamp(12px,1.5vw,20px);border:2px solid rgba(255,255,255,.72);border-radius:clamp(20px,2.1vw,30px);box-shadow:0 6px 0 rgba(15,75,137,.13),0 13px 25px rgba(23,90,164,.13),inset 0 2px 5px rgba(255,255,255,.23);color:#fff;text-align:left;transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
+#titleScreen .title-menu .menu-button::after{content:'›';display:grid;place-items:center;width:clamp(28px,2.5vw,42px);height:clamp(28px,2.5vw,42px);border-radius:50%;background:#fff;color:#195db3;font-family:Arial,sans-serif;font-size:clamp(24px,2.2vw,35px);font-weight:bold;line-height:1;justify-self:end}
+#titleScreen .title-menu .menu-button:focus-visible,#titleScreen .title-install .menu-button:focus-visible,#titleScreen #musicMiniBtn:focus-visible{outline:4px solid #0a4a9d;outline-offset:4px}
+#titleScreen .title-menu .menu-button:hover{transform:translateY(-3px);filter:saturate(1.12);box-shadow:0 8px 0 rgba(15,75,137,.11),0 16px 30px rgba(23,90,164,.16)}
+#titleScreen .title-menu .menu-button:active{transform:translateY(1px) scale(.99)}
+#titleScreen .title-menu .menu-icon{display:grid;place-items:center;width:clamp(54px,5.6vw,78px);height:clamp(54px,5.6vw,78px);border:1px solid rgba(255,255,255,.37);border-radius:clamp(15px,1.65vw,23px);background:linear-gradient(145deg,rgba(255,255,255,.27),rgba(255,255,255,.14));box-shadow:inset 0 2px 5px rgba(255,255,255,.2);font-size:clamp(25px,2.3vw,35px)}
+#titleScreen .title-menu .menu-button strong{display:block;font-size:clamp(18px,1.85vw,29px);font-weight:1000;line-height:1.16;overflow-wrap:anywhere;text-shadow:0 1px 0 rgba(0,0,0,.06)}
+#titleScreen .title-menu .menu-button small{display:block;margin-top:7px;font-size:clamp(12px,1.12vw,17px);font-weight:800;line-height:1.35;opacity:.97;overflow-wrap:anywhere}
+#titleScreen .title-menu .menu-primary{background:linear-gradient(130deg,#0066dc,#0b9aed)}
+#titleScreen .title-menu .menu-dungeon{background:linear-gradient(130deg,#7438d7,#af50e1)}
+#titleScreen .title-menu .menu-community{background:linear-gradient(130deg,#009c9a,#17b6b4)}
+#titleScreen .title-menu .menu-print{background:linear-gradient(130deg,#1cb98a,#25ce84)}
+#titleScreen .title-menu .menu-record{background:linear-gradient(130deg,#27b13e,#51ca4c)}
+#titleScreen .title-menu .menu-settings{background:linear-gradient(130deg,#ffa600,#ffc32b)}
+#titleScreen .title-menu .menu-settings::after{color:#a76b02}
+
+#titleScreen .title-install{width:100%;margin:10px auto 0;text-align:center}
+#titleScreen .title-install .menu-button{display:inline-grid;grid-template-columns:38px minmax(0,1fr);gap:10px;align-items:center;width:auto;max-width:100%;min-height:48px;padding:8px 15px;border:1px solid #a8c7e7;border-radius:999px;background:#fff;color:#205d9d;text-align:left;box-shadow:0 4px 10px rgba(24,110,178,.09)}
+#titleScreen .title-install .menu-icon{width:35px;height:35px;border-radius:12px;background:#e3f1ff;font-size:21px}
+#titleScreen .title-install .menu-button strong{font-size:14px}
+#titleScreen .title-install .menu-button small{font-size:11px;color:#567d9d}
+#titleScreen #installWebAppMessage{color:#356b9e}
+#titleScreen .title-bottom{display:flex;align-items:center;justify-content:center;gap:clamp(14px,2.5vw,34px);flex-wrap:wrap;width:100%;max-width:1510px;margin:0 auto auto}
+#titleScreen .music-mini{grid-column:auto;grid-row:auto;display:flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:7px 15px;border:1px solid #d9e9f8;border-radius:999px;background:#fff;color:#205c98;font-size:clamp(13px,1.25vw,17px);box-shadow:0 6px 15px rgba(48,108,175,.09)}
+#titleScreen .music-mini>span:first-child{font-size:22px;color:#1265b4}
+#titleScreen .mini-toggle{min-height:38px;border-color:#b8d2e9;color:#1d5797;font-size:15px;font-weight:900}
+#titleScreen .title-footer{grid-column:auto;grid-row:auto;margin:0;color:#7994ac;font-size:clamp(12px,1.1vw,15px);font-weight:700}
+
+/* Mobile and portrait tablets: brand first, then six full-width menu cards. */
+@media (max-width:760px), (orientation:portrait){
+  #titleScreen.title-screen.active{justify-content:flex-start;gap:12px;padding:clamp(12px,3vw,26px) 14px calc(20px + env(safe-area-inset-bottom));min-height:100dvh}
+  #titleScreen .title-layout{grid-template-columns:1fr;max-width:610px;gap:18px;margin:0 auto}
+  #titleScreen .title-identity{gap:9px}
+  #titleScreen .title-brand{min-height:35px;padding:6px 19px;font-size:clamp(14px,3.8vw,19px)}
+  #titleScreen .title-logo-wrap{width:clamp(106px,24vw,157px);margin:4px auto 0;padding:5px}
+  #titleScreen .title-mark{width:90%;border-width:4px}
+  #titleScreen .title-mark-letter{font-size:clamp(61px,14vw,96px)}
+  #titleScreen .title-name{font-size:clamp(34px,8vw,54px);line-height:1.12}
+  #titleScreen .title-sub{font-size:clamp(12px,2.8vw,16px)}
+  #titleScreen #dailyStreakHomeBadge{font-size:12px}
+  #titleScreen .title-menu{grid-template-columns:1fr;gap:9px}
+  #titleScreen .title-menu .menu-button{grid-template-columns:clamp(45px,12vw,62px) minmax(0,1fr) 24px;min-height:clamp(71px,10.7vw,84px);gap:11px;padding:10px 14px;border-radius:22px}
+  #titleScreen .title-menu .menu-icon{width:clamp(45px,12vw,62px);height:clamp(45px,12vw,62px);border-radius:15px;font-size:clamp(24px,5.7vw,30px)}
+  #titleScreen .title-menu .menu-button strong{font-size:clamp(18px,4.4vw,24px);line-height:1.2}
+  #titleScreen .title-menu .menu-button small{margin-top:2px;font-size:clamp(11px,2.65vw,14px)}
+  #titleScreen .title-menu .menu-button::after{width:27px;height:27px;font-size:25px}
+  #titleScreen .title-bottom{gap:10px;flex-direction:column;margin:8px auto 0}
+  #titleScreen .music-mini{min-height:42px;padding:4px 14px;font-size:15px}
+  #titleScreen .title-footer{font-size:12px}
+}
+
+/* Compact landscape phones / small desktop browser windows. */
+@media (orientation:landscape) and (min-width:761px) and (max-height:590px){
+  #titleScreen.title-screen.active{justify-content:flex-start;gap:9px;padding:8px 16px 12px}
+  #titleScreen .title-layout{gap:15px;grid-template-columns:minmax(190px,.85fr) minmax(480px,1.9fr);margin:0 auto}
+  #titleScreen .title-identity{gap:6px}
+  #titleScreen .title-brand{min-height:31px;padding:5px 10px;font-size:13px}
+  #titleScreen .title-logo-wrap{width:clamp(80px,23vh,136px);padding:5px;margin:0}
+  #titleScreen .title-mark-letter{font-size:clamp(45px,12vh,73px)}
+  #titleScreen .title-name{font-size:clamp(27px,3vw,42px)}
+  #titleScreen .title-sub{font-size:12px}
+  #titleScreen .title-menu{gap:8px}
+  #titleScreen .title-menu .menu-button{grid-template-columns:40px minmax(0,1fr) 24px;min-height:74px;padding:7px 10px;gap:8px;border-radius:16px}
+  #titleScreen .title-menu .menu-icon{width:40px;height:40px;font-size:21px;border-radius:12px}
+  #titleScreen .title-menu .menu-button strong{font-size:clamp(14px,1.6vw,21px)}
+  #titleScreen .title-menu .menu-button small{font-size:11px;margin-top:2px}
+  #titleScreen .title-menu .menu-button::after{width:24px;height:24px;font-size:22px}
+  #titleScreen .title-bottom{gap:12px;margin:0 auto}
+  #titleScreen .music-mini{min-height:32px;padding:2px 9px;font-size:12px}
+}
+@media (max-width:360px){
+  #titleScreen.title-screen.active{padding-left:9px;padding-right:9px}
+  #titleScreen .title-menu{gap:7px}
+  #titleScreen .title-menu .menu-button{padding:8px 9px;gap:7px;min-height:70px}
+  #titleScreen .title-menu .menu-button strong{font-size:17px}
+  #titleScreen .title-name{font-size:33px}
+}
+@media (prefers-reduced-motion:reduce){
+  #titleScreen .title-bubble,#titleScreen .title-bubble-field::before,#titleScreen .title-bubble-field::after{animation:none!important}
+  #titleScreen .title-menu .menu-button{transition:none}
+}

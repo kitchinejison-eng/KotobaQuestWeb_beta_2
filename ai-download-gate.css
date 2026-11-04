@@ -1,0 +1,41 @@
+.ai-download-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  background: rgba(8, 31, 65, .73);
+  color: #183b60;
+}
+.ai-download-gate-card {
+  box-sizing: border-box;
+  width: min(100%, 450px);
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 3px solid #cce9ff;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: 0 20px 70px rgba(0, 24, 58, .35);
+  padding: clamp(20px, 5vw, 30px);
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.ai-download-gate-icon {font-size: 46px;line-height: 1.2;}
+.ai-download-gate-kicker {margin: 8px 0 3px;color: #3875a9;font-weight: 800;font-size: 13px;letter-spacing: .03em;}
+.ai-download-gate-card h2 {margin: 6px 0 14px;color: #174e87;font-size: clamp(20px, 5.2vw, 25px);line-height: 1.45;}
+.ai-download-gate-card p {margin: 10px 0;}
+.ai-download-gate-info {display: flex;justify-content: space-between;gap: 8px;align-items: center;border: 1px solid #bedff7;border-radius: 14px;background: #f0f9ff;padding: 10px 13px;font-size: 14px;}
+.ai-download-gate-info strong {color: #13694e;white-space: nowrap;}
+.ai-download-gate-card progress {width: 100%;height: 14px;margin: 16px 0 3px;accent-color: #1873d2;}
+.ai-download-gate-card progress[hidden] {display: none;}
+.ai-download-gate-status {min-height: 2em;color: #34556e;font-size: 14px;overflow-wrap: anywhere;}
+.ai-download-gate-actions {display: grid;gap: 10px;margin-top: 16px;}
+.ai-download-gate-actions button {min-height: 49px;border-radius: 14px;border: 2px solid #1873d2;background: #1873d2;color: #fff;font: inherit;font-weight: 800;cursor: pointer;}
+.ai-download-gate-actions button:nth-child(2) {background: #fff;color: #165890;border-color: #a6cfe9;}
+.ai-download-gate-actions button:disabled {opacity: .55;cursor: wait;}
+.ai-download-gate-actions button[hidden] {display: none;}
+.ai-download-gate-footnote {font-size: 12px;color: #61798c;}
+@media(max-height: 590px) {.ai-download-gate {align-items: flex-start;overflow-y: auto;}}

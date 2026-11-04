@@ -1,0 +1,27 @@
+/* Ver_beta_4: a read-only articulatory guide for the current random question. */
+.artnav-v4-current{display:flex;flex-direction:column;gap:11px}
+.artnav-v4-current-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-height:178px;padding:18px 12px;border:2px solid #edc043;border-radius:20px;background:linear-gradient(145deg,#fff9ca,#fff3a0);box-shadow:0 5px 0 rgba(214,170,32,.16);text-align:center}
+.artnav-v4-current-icon{display:grid;place-items:center;width:66px;height:66px;border:2px solid #ffda83;border-radius:20px;background:rgba(255,255,255,.8);font-size:35px}
+.artnav-v4-current-card strong{color:#385362;font-size:clamp(20px,2vw,29px);line-height:1.3}
+.artnav-v4-current-card>span:last-child{color:#576c78;font-size:clamp(13px,1.5vw,17px);font-weight:800}
+.artnav-v4-guide-description{margin:2px 5px;line-height:1.7;color:#344e5c;font-size:clamp(13px,1.45vw,17px);font-weight:800}
+.artnav-v4-guide-tip{margin-top:auto;padding:11px 12px;border:1px solid #b8dae3;border-radius:14px;background:#e8f8ff;color:#386b79;font-size:13px;line-height:1.6}
+.artnav-v4-auto-notice{min-height:56px;display:grid;place-items:center;margin-top:12px;padding:11px 13px;border:2px solid #a4cedb;border-radius:15px;background:linear-gradient(135deg,#e1f9fb,#f1faff);color:#205d78;text-align:center;font-size:clamp(13px,1.3vw,17px);font-weight:900;line-height:1.45}
+.artnav-v1-sound:not(.is-selected):not(.is-done){color:#57717e;background:#f6fbff}
+.artnav-v4-current+.artnav-v1-middle{min-width:0}
+@media (orientation:portrait){
+  .artnav-v1-grid{grid-template-columns:1fr}
+  .artnav-v4-current-card{min-height:114px;display:grid;grid-template-columns:60px 1fr;gap:8px 13px;text-align:left;justify-content:start;padding:12px}
+  .artnav-v4-current-icon{grid-row:1 / 3;width:56px;height:56px;border-radius:15px;font-size:29px}
+  .artnav-v4-current-card strong{font-size:23px}
+  .artnav-v4-current-card>span:last-child{font-size:13px}
+  .artnav-v4-guide-tip{margin-top:0}
+}
+@media (max-width:620px){
+  .artnav-v4-current{gap:7px}
+  .artnav-v4-current-card{min-height:85px;padding:9px}
+  .artnav-v4-current-icon{width:51px;height:51px;font-size:27px}
+  .artnav-v4-guide-description{font-size:13px;line-height:1.5}
+  .artnav-v4-guide-tip{font-size:12px;padding:7px 9px}
+  .artnav-v4-auto-notice{min-height:50px;font-size:13px}
+}

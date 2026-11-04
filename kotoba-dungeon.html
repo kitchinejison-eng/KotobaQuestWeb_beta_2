@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#243064">
+  <title>ことばクエスト 開発版｜コトバ・ダンジョン</title>
+  <link rel="stylesheet" href="kotoba-dungeon.css?v=74">
+  <link rel="stylesheet" href="browser-responsive.css?v=74">
+  <link rel="stylesheet" href="daily-streak.css?v=108">
+</head>
+<body>
+</div>
+
+  <main class="kd-app">
+    <header class="kd-topbar">
+      <button type="button" id="kdBackBtn" class="kd-back" aria-label="メイン画面へ戻る">← 戻る</button>
+      <div class="kd-brand"><span class="kd-brand-icon">🗝️</span><div><strong>コトバ・ダンジョン</strong><small>ことばを集めて、レベルアップ！</small></div></div>
+      <button type="button" id="kdSettingsTopBtn" class="kd-icon-button" aria-label="ルール設定">⚙</button>
+    </header>
+
+    <section id="kdSetupScreen" class="kd-screen" aria-labelledby="kdSetupTitle">
+      <div class="kd-hero kd-hero-setup">
+        <div class="kd-hero-stars" aria-hidden="true">✦　✧　✦</div>
+        <span class="kd-pill">NEW MODE</span>
+        <h1 id="kdSetupTitle">冒険のじゅんび</h1>
+        <p>名前とパートナーを決めて、<br>自分のペースで言葉を集めよう。</p>
+      </div>
+      <div class="kd-card">
+        <label class="kd-label" for="kdSetupName">冒険者の名前</label>
+        <input id="kdSetupName" class="kd-text-input" type="text" maxlength="12" placeholder="名前を入力（12文字まで）" autocomplete="nickname">
+        <div class="kd-label kd-label-spaced">パートナーを選ぶ</div>
+        <div id="kdSetupAvatars" class="kd-avatar-grid" aria-label="アバター選択"></div>
+        <div class="kd-rules-preview">
+          <div><span>❤️</span><div><strong>ゲームオーバーなし</strong><small>まちがえても大丈夫。何度でも挑戦できます。</small></div></div>
+          <div><span>✨</span><div><strong>正解すると経験値</strong><small>経験値がたまるとレベルアップします。</small></div></div>
+        </div>
+        <button type="button" id="kdBeginSetupBtn" class="kd-primary-button">この設定で冒険をはじめる <span>→</span></button>
+      </div>
+    </section>
+
+    <section id="kdHomeScreen" class="kd-screen kd-hidden" aria-labelledby="kdHomeTitle">
+      <section class="kd-profile-hero">
+        <div class="kd-profile-avatar-wrap"><img id="kdHomeAvatar" class="kd-profile-avatar" alt="選択中のアバター"><span id="kdHomeOutfit" class="kd-avatar-outfit" aria-label="着せ替えなし"></span></div>
+        <div class="kd-profile-info">
+          <div class="kd-eyebrow">YOUR PARTNER</div>
+          <h1 id="kdHomeTitle"><span id="kdHomeName">冒険者</span> さん</h1>
+          <div class="kd-level-line"><span class="kd-level-badge" id="kdHomeLevel">Lv.1</span><span id="kdHomeRank" class="kd-rank">ことばのたまご</span></div>
+          <div class="kd-exp-label"><span>レベル経験値</span><strong id="kdHomeExpText">0 / 50 EXP</strong></div>
+          <div class="kd-exp-track"><div id="kdHomeExpBar" class="kd-exp-bar"></div></div>
+          <small class="kd-total-exp">累計経験値 <b id="kdHomeTotalExp">0</b> EXP</small>
+        </div>
+      </section>
+
+      <section class="kd-collectibles-card" aria-label="メダルとガチャ">
+        <div class="kd-medal-summary">
+          <div class="kd-medal-emblem" aria-hidden="true">🏅</div>
+          <div class="kd-medal-text"><strong>メダル <span id="kdHomeMedals">0</span>枚</strong><small>全問正解で5枚、1問以上正解で1枚、全問不正解は0枚。</small></div>
+          <div class="kd-medal-next" id="kdMedalNextText">あと5枚でガチャ！</div>
+        </div>
+        <div class="kd-medal-progress" aria-label="メダルガチャまでの進み具合">
+          <div class="kd-medal-progress-label"><span>🎰 ガチャゲージ</span><strong id="kdMedalProgressLabel">0 / 5 枚</strong></div>
+          <div id="kdMedalSlots" class="kd-medal-slots" role="img" aria-label="メダル5枚でガチャ1回">
+            <span class="kd-medal-slot" aria-hidden="true">🏅</span><span class="kd-medal-slot" aria-hidden="true">🏅</span><span class="kd-medal-slot" aria-hidden="true">🏅</span><span class="kd-medal-slot" aria-hidden="true">🏅</span><span class="kd-medal-slot" aria-hidden="true">🏅</span>
+          </div>
+          <small class="kd-medal-progress-note">冒険クリアでメダルを集めよう！5枚で新しい仲間・着せ替えをゲット</small>
+        </div>
+        <div class="kd-collectibles-actions">
+          <button type="button" id="kdOpenCollectionBtn" class="kd-secondary-button">🎒 アバター・着せ替え</button>
+          <button type="button" id="kdGachaBtn" class="kd-gacha-button">🎁 メダル5枚でガチャ</button>
+        </div>
+      </section>
+
+      <section class="kd-next-task-card">
+        <div class="kd-card-topline"><span class="kd-section-tag">TODAY'S QUEST</span><span id="kdTaskLevelTag" class="kd-mini-badge">Lv.1〜2</span></div>
+        <h2 id="kdTaskTitle">絵を見て、ことばを選ぼう</h2>
+        <p id="kdTaskDescription">絵やマークを見て、合う言葉を選びます。</p>
+        <div class="kd-task-benefits"><span>⭐ 正解で EXP +10</span><span>🎁 クリアボーナス +10</span></div>
+        <button type="button" id="kdStartChallengeBtn" class="kd-primary-button kd-start-button">ダンジョンに挑戦 <span>▶</span></button>
+
+      </section>
+
+      <section class="kd-stats-grid">
+        <div class="kd-stat-card"><span>🏆</span><strong id="kdHomeClears">0</strong><small>クリア回数</small></div>
+        <div class="kd-stat-card"><span>✅</span><strong id="kdHomeCorrectRate">—</strong><small>平均正答率</small></div>
+        <div class="kd-stat-card"><span>🌱</span><strong id="kdHomeBestLevel">1</strong><small>現在のレベル</small></div>
+      </section>
+
+      <div class="kd-home-actions">
+        <button type="button" id="kdOpenSettingsBtn" class="kd-secondary-button">👤 名前・アバター・ルール設定</button>
+        <button type="button" id="kdShowHistoryBtn" class="kd-secondary-button">📚 さいきんの冒険</button>
+      </div>
+
+      <section id="kdCollectionPanel" class="kd-card kd-collection-panel kd-hidden" aria-labelledby="kdCollectionTitle">
+        <div class="kd-card-heading"><h2 id="kdCollectionTitle">🎒 コレクション</h2><button type="button" id="kdCloseCollectionBtn" class="kd-small-button">閉じる</button></div>
+        <p class="kd-collection-help">持っているアバターや着せ替えを選ぶと、すぐに装備できます。</p>
+        <h3 class="kd-collection-heading">アバター</h3><div id="kdCollectionAvatars" class="kd-collection-grid"></div>
+        <h3 class="kd-collection-heading">着せ替え</h3><div id="kdCollectionOutfits" class="kd-outfit-grid"></div>
+      </section>
+
+      <section id="kdHistoryPanel" class="kd-card kd-hidden">
+        <div class="kd-card-heading"><h2>さいきんの冒険</h2><button type="button" id="kdCloseHistoryBtn" class="kd-small-button">閉じる</button></div>
+        <div id="kdHistoryList" class="kd-history-list"></div>
+      </section>
+    </section>
+
+    <section id="kdSettingsScreen" class="kd-screen kd-hidden" aria-labelledby="kdSettingsTitle">
+      <div class="kd-page-heading"><span class="kd-heading-icon">⚙️</span><div><h1 id="kdSettingsTitle">プロフィール・ルール設定</h1><p>いつでも変更できます。</p></div></div>
+      <div class="kd-card">
+        <label class="kd-label" for="kdSettingsName">冒険者の名前</label>
+        <input id="kdSettingsName" class="kd-text-input" type="text" maxlength="12" placeholder="名前を入力（12文字まで）" autocomplete="nickname">
+        <div class="kd-label kd-label-spaced">パートナーを変更</div>
+        <div id="kdSettingsAvatars" class="kd-avatar-grid" aria-label="アバター変更"></div>
+      </div>
+      <div class="kd-card">
+        <div class="kd-card-heading"><h2>🎮 ルール設定</h2><span class="kd-soft-badge">自分に合う設定</span></div>
+        <label class="kd-setting-row" for="kdQuestionCount"><span><strong>1回の問題数</strong><small>体調や集中力に合わせて選べます。</small></span><select id="kdQuestionCount" class="kd-select"><option value="5">5問</option><option value="10">10問</option></select></label>
+        <label class="kd-setting-row" for="kdAutoRead"><span><strong>問題を自動で読み上げる</strong><small>問題が出ると音声で読みます。</small></span><input id="kdAutoRead" class="kd-toggle" type="checkbox"></label>
+        <label class="kd-setting-row" for="kdShowHints"><span><strong>ヒントボタンを表示する</strong><small>困ったときにヒントを見られます。</small></span><input id="kdShowHints" class="kd-toggle" type="checkbox" checked></label>
+        <p class="kd-rule-note">まちがえても経験値は減りません。時間制限・HP・ゲームオーバーはありません。</p>
+        <button type="button" id="kdSaveSettingsBtn" class="kd-primary-button">設定を保存する</button>
+        <button type="button" id="kdCancelSettingsBtn" class="kd-secondary-button">もどる</button>
+      </div>
+      <div class="kd-card kd-danger-card">
+        <h2>🔄 最初からやり直す</h2>
+        <p>このモードの名前、アバター、レベル、経験値、クリア記録、ルール設定を初期化します。ほかのトレーニングの記録は削除されません。</p>
+        <button type="button" id="kdResetBtn" class="kd-danger-button">コトバ・ダンジョンのデータを初期化</button>
+      </div>
+    </section>
+
+    <section id="kdChallengeScreen" class="kd-screen kd-hidden" aria-labelledby="kdChallengeTitle">
+      <div class="kd-challenge-top">
+        
+        <div class="kd-challenge-level" id="kdChallengeLevel">Lv.1 の課題</div>
+        <div class="kd-challenge-progress"><span id="kdQuestionPosition">1 / 5</span><div class="kd-question-track"><div id="kdQuestionBar"></div></div></div>
+      </div>
+      <div class="kd-card kd-question-card">
+        <div class="kd-question-topic"><span id="kdQuestionType">ことばをえらぶ</span><button type="button" id="kdSpeakQuestionBtn" class="kd-speak-button" aria-label="問題を読み上げる">🔊 聞く</button></div>
+        <div id="kdQuestionContext" class="kd-question-context kd-hidden"></div>
+        <h1 id="kdChallengeTitle" class="kd-question-prompt">問題がここに表示されます。</h1>
+        <div id="kdQuestionVisual" class="kd-question-visual kd-hidden"></div>
+        <p id="kdQuestionInstruction" class="kd-question-instruction">合う答えを選んでください。</p>
+        <div id="kdChoiceArea" class="kd-choice-area"></div>
+        <form id="kdInputForm" class="kd-input-form kd-hidden">
+          <label class="kd-label" for="kdAnswerInput">答えを入力してください</label>
+          <input id="kdAnswerInput" class="kd-text-input kd-answer-input" type="text" maxlength="60" placeholder="答えを入力" autocomplete="off">
+          <button type="submit" class="kd-primary-button">この答えにする ✓</button>
+        </form>
+        <div id="kdMicPanel" class="kd-mic-panel kd-hidden"><button type="button" id="kdMicAnswerBtn" class="kd-mic-button">🎙️ マイクで答える</button><p id="kdMicStatus" aria-live="polite">マイクボタンを押してから答えてください。</p></div>
+        <button type="button" id="kdHintBtn" class="kd-hint-button">💡 ヒントを見る</button>
+        <div id="kdHintText" class="kd-hint-text kd-hidden"></div>
+        <div id="kdAnswerFeedback" class="kd-answer-feedback" aria-live="polite"></div>
+        <button type="button" id="kdNextQuestionBtn" class="kd-primary-button kd-hidden">つぎの問題へ →</button>
+      </div>
+      <p class="kd-soft-reminder">あせらなくて大丈夫。自分のペースで進みましょう。</p>
+    </section>
+
+    <section id="kdResultScreen" class="kd-screen kd-hidden" aria-labelledby="kdResultTitle">
+      <div class="kd-result-hero"><div class="kd-result-confetti" aria-hidden="true">✦ ✧ ✦ ✧ ✦</div><div id="kdResultIcon" class="kd-result-icon">🎉</div><span class="kd-pill">QUEST CLEAR</span><h1 id="kdResultTitle">冒険クリア！</h1><p id="kdResultMessage">最後までよくがんばりました。</p></div>
+      <div class="kd-card kd-result-card">
+        <div class="kd-result-score"><strong id="kdResultCorrect">0 / 5</strong><span>正解数</span></div>
+        <div class="kd-result-accuracy"><div class="kd-result-accuracy-track"><div id="kdResultAccuracyBar"></div></div><strong id="kdResultAccuracy">正答率 0%</strong></div>
+        <div class="kd-exp-earned"><span>✨ 今回獲得した経験値</span><strong id="kdResultExp">+10 EXP</strong></div>
+        <div class="kd-result-medal-earned"><div><strong>🏅 クリアメダル</strong><small id="kdResultMedalBalance">全問題クリアで5枚獲得</small></div><strong id="kdResultMedal">+5枚</strong></div>
+        <div id="kdResultLevelChange" class="kd-level-change"></div>
+        <div id="kdResultDailyStreak" class="daily-streak-slot"></div>
+        <button type="button" id="kdResultContinueBtn" class="kd-primary-button">冒険のつづきへ →</button>
+        <button type="button" id="kdResultAgainBtn" class="kd-secondary-button">もう一度挑戦</button>
+      </div>
+    </section>
+
+    <div id="kdLevelUpOverlay" class="kd-levelup-overlay kd-hidden" role="dialog" aria-modal="true" aria-labelledby="kdLevelUpTitle">
+      <div class="kd-levelup-card"><img src="images/ivent/LVUP_01.png" alt="レベルアップ"><div class="kd-levelup-glow" aria-hidden="true">✦</div><h2 id="kdLevelUpTitle">レベルアップ！</h2><p id="kdLevelUpText">Lv.1 → Lv.2</p><p class="kd-levelup-sub">ことばの力がアップしました！</p><button type="button" id="kdLevelUpCloseBtn" class="kd-primary-button">やったね！</button></div>
+    </div>
+
+
+    <div id="kdBonusEventOverlay" class="kd-bonus-event-overlay kd-hidden" role="dialog" aria-modal="true" aria-labelledby="kdBonusEventTitle">
+      <div class="kd-bonus-event-card">
+        <div class="kd-bonus-event-rays" aria-hidden="true">✦　✨　🌟　✨　✦</div>
+        <span class="kd-bonus-event-badge">RARE EVENT</span>
+        <h2 id="kdBonusEventTitle">🌟 ボーナスステージ出現！</h2>
+        <p>冒険の途中で、特別なステージを発見しました。<br><strong>全問正解で5枚、1問以上正解で1枚を獲得！</strong></p>
+        <div class="kd-bonus-event-note">今挑戦しても、今回は見送っても大丈夫です。</div>
+        <button type="button" id="kdBonusEventStartBtn" class="kd-primary-button">ボーナスに挑戦する！</button>
+        <button type="button" id="kdBonusEventLaterBtn" class="kd-secondary-button">今回は見送る</button>
+      </div>
+    </div>
+
+    <div id="kdGachaOverlay" class="kd-gacha-overlay kd-hidden" role="dialog" aria-modal="true" aria-labelledby="kdGachaTitle">
+      <div id="kdGachaDialog" class="kd-gacha-dialog">
+        <div class="kd-gacha-rays" aria-hidden="true">✦ ✧ ✦ ✧ ✦</div>
+        <span class="kd-pill">MEDAL GACHA</span>
+        <span id="kdGachaRarityBadge" class="kd-gacha-rarity-badge">✨ NEW ITEM</span>
+        <h2 id="kdGachaTitle">ガチャの結果！</h2>
+        <div id="kdGachaRewardVisual" class="kd-gacha-reward-visual"><span>🎁</span></div>
+        <strong id="kdGachaRewardName" class="kd-gacha-reward-name">新しいアイテム</strong>
+        <p id="kdGachaRewardDescription" class="kd-gacha-reward-description">新しい仲間がコレクションに加わりました。</p>
+        <button type="button" id="kdGachaEquipBtn" class="kd-primary-button">装備する</button>
+        <button type="button" id="kdGachaCloseBtn" class="kd-secondary-button">あとで装備する</button>
+      </div>
+    </div>
+
+    <div id="kdToast" class="kd-toast" aria-live="polite"></div>
+    <footer class="kd-footer">コトバ・ダンジョン｜ことばクエスト 開発版</footer>
+  </main>
+  <audio id="kdBgmAudio" preload="auto" loop playsinline src="BGM/seishishitauchu.mp3" style="display:none"></audio>
+  <script src="daily-streak.js?v=108"></script>
+  <script src="kotoba-dungeon.js?v=106"></script>
+</body>
+</html>

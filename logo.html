@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ff4b00">
+  <title>ことばクエスト 開発版｜起動</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body { width:100%; height:100%; min-height:100%; margin:0; padding:0; overflow:hidden; background:#ff4b00; }
+    .logo-splash-screen { position:fixed; inset:0; width:100%; height:100%; min-height:100dvh; }
+  </style>
+  <link rel="stylesheet" href="browser-responsive.css">
+</head>
+<body>
+  <main aria-label="ことばクエスト 起動画面">
+    <section id="logoSplashScreen" class="screen logo-splash-screen active" aria-label="エジソン・キッチン ロゴ">
+      <img src="images/ejison-kitchen-logo.jpeg" alt="制作 エジソン・キッチン" class="logo-splash-image">
+      <span class="logo-splash-spark spark-one" aria-hidden="true">✦</span>
+      <span class="logo-splash-spark spark-two" aria-hidden="true">✧</span>
+      <span class="logo-splash-spark spark-three" aria-hidden="true">✦</span>
+      <span class="logo-splash-spark spark-four" aria-hidden="true">✧</span>
+      <span class="logo-splash-glint" aria-hidden="true"></span>
+    </section>
+  </main>
+  <script>
+  (function () {
+    'use strict';
+    // 起動ロゴから会話イベントへは履歴を積まずに移動します。
+    var moved = false;
+    function openOpeningEvent() {
+      if (moved) return;
+      moved = true;
+      window.location.replace('opening-event.html');
+    }
+    // 画像読み込み失敗時も先へ進めるよう、時間制御を主にします。
+    window.setTimeout(openOpeningEvent, 2300);
+    var image = document.querySelector('.logo-splash-image');
+    if (image) image.addEventListener('error', function () {
+      image.style.display = 'none';
+      window.setTimeout(openOpeningEvent, 500);
+    }, { once: true });
+  })();
+  </script>
+</body>
+</html>

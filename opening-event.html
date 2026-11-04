@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171b22">
+  <title>ことばクエスト 開発版｜会話イベント Ver.69</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body { width:100%; min-height:100%; margin:0; padding:0; background:#171b22; overflow:hidden; }
+    .opening-app { width:100%; max-width:none; min-height:100svh; margin:0; padding:0; }
+    .tutorial-screen.active { width:100%; min-height:100svh; height:100dvh; }
+    /* スマートフォンの縦画面でも、ねこまるの顔が画面上端から切れないサイズに調整します。 */
+    .opening-app .event-character {
+      left:50%; bottom:clamp(178px, 25vh, 225px);
+      width:min(66vw, 430px); height:min(58vh, 500px); max-height:none;
+      transform:translateX(-50%); align-items:flex-end; justify-content:center;
+    }
+    .opening-app .event-character-img {
+      display:block; width:auto; height:100%; max-width:100%; max-height:100%;
+      object-fit:contain; object-position:center bottom;
+    }
+    @media (orientation:landscape) and (max-height:620px) {
+      .opening-app .event-character { bottom:145px; width:min(32vw, 340px); height:min(60vh, 270px); }
+    }
+    @media (max-height:650px) and (orientation:portrait) {
+      .opening-app .event-character { bottom:155px; height:42vh; width:min(60vw, 330px); }
+    }
+
+    .event-replay-button {
+      position:absolute; left:5%; bottom:5%; z-index:8;
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:44px; padding:8px 14px; border:2px solid #fff; border-radius:10px;
+      background:linear-gradient(135deg,#087eaf,#075f8b); color:#fff;
+      font-size:clamp(14px,2.3vw,18px); font-weight:900; cursor:pointer;
+      box-shadow:0 4px 0 #06415e; text-shadow:none;
+    }
+    .event-replay-button:focus-visible { outline:4px solid #ffe16b; outline-offset:3px; }
+    .event-replay-button:active { transform:translateY(2px); box-shadow:0 2px 0 #06415e; }
+    .opening-event-skip {
+      position:fixed;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));z-index:999;
+      min-height:48px;padding:10px 18px;border:2px solid #fff;border-radius:999px;
+      background:rgba(8,32,59,.96);color:#fff;font-size:16px;font-weight:800;cursor:pointer;
+      box-shadow:0 4px 16px rgba(0,0,0,.4);
+    }
+    .opening-event-skip:focus-visible{outline:3px solid #ffe16b;outline-offset:3px;}
+    .opening-app .event-character.rare-event { filter: drop-shadow(0 0 18px rgba(255,218,87,.95)) drop-shadow(0 0 34px rgba(255,165,0,.65)); animation: rareCharacterPulse 1.1s ease-in-out 3; }
+    .opening-app .event-character.rare-event::after { content:"✨ レア登場！ ✨"; position:absolute; top:-8%; left:50%; transform:translateX(-50%); white-space:nowrap; padding:6px 13px; border-radius:999px; color:#382300; background:linear-gradient(90deg,#ffe789,#fff7cd,#ffc84d); border:2px solid #fff3b2; font-size:clamp(13px,2vw,20px); font-weight:900; box-shadow:0 0 20px rgba(255,210,70,.8); animation:rareLabelPop .65s ease-out both; }
+    @keyframes rareCharacterPulse { 0%,100% { filter:drop-shadow(0 0 10px rgba(255,218,87,.6)); } 50% { filter:drop-shadow(0 0 28px rgba(255,218,87,1)) drop-shadow(0 0 44px rgba(255,165,0,.8)); } }
+    @keyframes rareLabelPop { 0% {opacity:0; transform:translateX(-50%) scale(.45) translateY(12px);} 75% {opacity:1; transform:translateX(-50%) scale(1.08);} 100% {opacity:1; transform:translateX(-50%) scale(1);} }
+    .opening-app .event-dialog-text { bottom:30%; }
+    @media (max-width:700px) { .opening-app .event-dialog-text { bottom:32%; } }
+    @media (orientation:landscape) and (max-height:620px) { .event-replay-button { min-height:38px; padding:5px 10px; } }
+    @supports not (height: 100dvh) { .tutorial-screen.active { height:100vh; } }
+  </style>
+  <link rel="stylesheet" href="browser-responsive.css">
+  <style id="opening-event-responsive-fix-v61">
+    /* v61: 会話イベントの横向き・PC表示修正。ダイアログとキャラクターを別領域に分けます。 */
+    html, body {
+      width: 100%; height: 100%; min-height: 0;
+      margin: 0; padding: 0; overflow: hidden;
+      overscroll-behavior: none;
+    }
+    .opening-app {
+      width: 100%; max-width: none; height: 100vh; height: 100dvh;
+      min-height: 0; margin: 0; padding: 0;
+    }
+    .opening-app .tutorial-screen.active {
+      width: 100%; height: 100vh; height: 100dvh;
+      min-height: 0; overflow: hidden;
+    }
+    .opening-app .event-bg { background-position: center center; }
+    .opening-app .event-character-img { object-fit: contain; }
+    .opening-app .event-dialog-text {
+      overflow-wrap: anywhere;
+      word-break: normal;
+      line-height: 1.42;
+    }
+    .opening-app .event-topbar { right:150px; }
+    @media (max-width:600px) { .opening-app .event-top-caption { display:none; } }
+
+    /* PC・横長タブレット：キャラクターを左、セリフ枠を右下に配置 */
+    @media (orientation: landscape) and (min-width: 900px) and (min-height: 621px) {
+      .opening-app .event-character {
+        left: 19.5%; bottom: clamp(185px, 22vh, 285px);
+        width: min(36vw, 520px); height: min(68vh, 650px);
+        max-height: none; transform: translateX(-50%);
+        align-items: flex-end; justify-content: center;
+      }
+      .opening-app .event-character-img {
+        width: auto; max-width: 100%; height: 100%; max-height: 100%;
+        object-fit: contain; object-position: center bottom;
+      }
+      .opening-app .event-dialog-area {
+        left: auto; right: clamp(22px, 3.5vw, 64px);
+        bottom: clamp(20px, 4vh, 42px); transform: none;
+        width: min(59vw, 980px); height: clamp(185px, 28vh, 260px);
+      }
+      .opening-app .event-dialog-text {
+        left: 7%; right: 13%; top: 19%; bottom: 27%;
+        font-size: clamp(18px, 1.75vw, 27px); line-height: 1.42;
+      }
+      .opening-app .event-name {
+        left: 5%; top: -10%; padding: 7px 15px;
+        font-size: clamp(15px, 1.45vw, 21px);
+      }
+      .opening-app .event-replay-button {
+        left: 5%; bottom: 3%; min-height: 38px;
+        padding: 5px 10px; font-size: clamp(12px, 1.05vw, 16px);
+      }
+      .opening-app .event-next-button {
+        right: 2.5%; bottom: 4%; width: 42px; min-height: 42px !important;
+      }
+    }
+
+    /* 横向きで高さが低いPC・タブレット：重なりを防ぎ、セリフ枠を低くする */
+    @media (orientation: landscape) and (min-width: 900px) and (max-height: 620px) {
+      .opening-app .event-character {
+        left: 16%; bottom: clamp(125px, 22vh, 170px);
+        width: min(30vw, 360px); height: min(64vh, 330px);
+      }
+      .opening-app .event-dialog-area {
+        left: auto; right: 2.5%; bottom: 8px; transform: none;
+        width: min(65vw, 920px); height: clamp(128px, 28vh, 164px);
+      }
+      .opening-app .event-dialog-text {
+        left: 7%; right: 13%; top: 16%; bottom: 28%;
+        font-size: clamp(15px, 1.8vw, 22px); line-height: 1.34;
+      }
+      .opening-app .event-name { top: -12%; padding: 5px 11px; font-size: 14px; }
+      .opening-app .event-replay-button {
+        left: 5%; bottom: 3%; min-height: 32px;
+        padding: 4px 8px; font-size: 12px;
+      }
+      .opening-app .event-next-button {
+        right: 2.5%; bottom: 3%; width: 36px; min-height: 36px !important; font-size: 20px;
+      }
+    }
+
+    /* 横向きスマートフォン：キャラクターを中央上部、会話欄を画面下部に固定 */
+    @media (orientation: landscape) and (max-width: 899px) {
+      .opening-app .event-character {
+        left: 50%; bottom: clamp(118px, 31vh, 158px);
+        width: min(38vw, 330px); height: min(63vh, 260px);
+        max-height: none; transform: translateX(-50%);
+      }
+      .opening-app .event-character-img {
+        width: auto; height: 100%; max-width: 100%; max-height: 100%;
+        object-fit: contain; object-position: center bottom;
+      }
+      .opening-app .event-dialog-area {
+        left: 50%; bottom: max(6px, env(safe-area-inset-bottom));
+        transform: translateX(-50%); width: 96vw;
+        height: clamp(122px, 33vh, 158px);
+      }
+      .opening-app .event-dialog-text {
+        left: 7%; right: 13%; top: 16%; bottom: 28%;
+        font-size: clamp(14px, 2.65vw, 20px); line-height: 1.34;
+      }
+      .opening-app .event-name { left: 5%; top: -12%; padding: 5px 10px; font-size: 14px; }
+      .opening-app .event-replay-button {
+        left: 5%; bottom: 3%; min-height: 31px;
+        padding: 3px 8px; font-size: 12px; border-width: 1px;
+      }
+      .opening-app .event-next-button {
+        right: 2.5%; bottom: 3%; width: 35px; min-height: 35px !important; font-size: 19px;
+      }
+    }
+
+    /* 縦向きスマートフォン：文字の領域をボタンから離して配置 */
+    @media (orientation: portrait) and (max-width: 899px) {
+      .opening-app .event-dialog-area {
+        left: 50%; bottom: max(12px, env(safe-area-inset-bottom));
+        transform: translateX(-50%); width: 94vw;
+        height: clamp(158px, 23vh, 195px);
+      }
+      .opening-app .event-dialog-text {
+        left: 7%; right: 13%; top: 18%; bottom: 29%;
+        font-size: clamp(17px, 4.8vw, 24px); line-height: 1.36;
+      }
+      .opening-app .event-replay-button {
+        left: 5%; bottom: 3%; min-height: 34px; padding: 4px 9px;
+        font-size: clamp(11px, 3.1vw, 14px);
+      }
+      .opening-app .event-next-button { right: 2.5%; bottom: 3%; width: 36px; min-height: 36px !important; }
+    }
+
+    @supports not (height: 100dvh) {
+      .opening-app, .opening-app .tutorial-screen.active { height: 100vh; }
+    }
+  </style>
+</head>
+<body class="opening-body">
+  <main class="app opening-app">
+    <section id="tutorialScreen" class="screen tutorial-screen active" aria-label="会話イベント">
+      <div class="event-bg" aria-hidden="true"></div>
+      <div class="event-bg-overlay" aria-hidden="true"></div>
+      <div class="event-topbar">
+        <span class="event-top-label">ことばクエスト</span>
+        <span class="event-top-caption">会話イベント</span>
+      </div>
+      <button type="button" id="tutorialSkipBtn" class="opening-event-skip" aria-label="会話イベントをスキップしてタイトルへ">スキップ ▶</button>
+      <div class="event-character" aria-hidden="true">
+        <img id="tutorialCharacterImage" src="images/ivent/cat_1_crop.png?v=69" alt="ねこまる" class="event-character-img">
+      </div>
+      <div class="event-dialog-area">
+        <img src="images/ivent/m_e1097_0.png" alt="" class="event-dialog-image" aria-hidden="true">
+        <div class="event-name" id="tutorialName">ネコマル</div>
+        <div class="event-dialog-text" id="tutorialDialog" aria-live="polite"></div>
+                <button type="button" class="event-next-button" id="tutorialNextBtn" aria-label="次へ">▼</button>
+      </div>
+    </section>
+  </main>
+  <script src="event-message-sound.js?v=86"></script>
+  <script>
+  (function () {
+    'use strict';
+    var profiles = [
+          {
+            name: 'ねこまる', image: 'images/ivent/cat_1_crop.png?v=69', rareImages: ['images/ivent/cat_1_crop_2.png?v=69', 'images/ivent/cat_1.png?v=69'],
+            greeting: ['やっほー！ ぼくは ねこまる。よろしくね！', 'こんにちは！ ねこまるだよ。', '会えてうれしいな！ ぼくは ねこまる。'],
+            welcome: ['ことばクエストへ ようこそ！', 'ここは 言葉の冒険をする世界だよ。', 'いっしょに 言葉の冒険へ出かけよう！'],
+            advice: ['自分のペースで ゆっくり進もうね。', '分からないときは、問題をもう一度聞いてみよう。', 'あわてずに、できるところから始めよう！'],
+            farewell: ['さあ、冒険を はじめよう！', '準備はいい？ ぼうけんへ出発！', 'きみのことを応援しているよ！']
+          },
+          {
+            name: '大根猫', image: 'images/ivent/cat_1_crop2.png?v=69',
+            greeting: ['にゃーん！ 大根猫が やってきたよ！', 'やあやあ！ わたしは 大根猫！', '元気いっぱい、大根猫だよ！'],
+            welcome: ['ことばクエストの世界へ ようこそ！', '今日も 言葉の力をためしてみよう！', '言葉の冒険を いっしょに楽しもう！'],
+            advice: ['よく聞いて、ゆっくり考えてみよう。', 'すぐに分からなくても大丈夫だよ。', '迷ったら、もう一度聞いてみるのもいいね！'],
+            farewell: ['よーし、一緒に冒険へ行こう！', '準備オッケー？ 進んでみよう！', 'さあ、はじめよう！ にゃーん！']
+          },
+          {
+            name: 'かぼちゃおじいさん', image: 'images/ivent/1_oji.png?v=69', rareImages: ['images/ivent/2_oji.png?v=69'],
+            greeting: ['ほっほっほ、わしは かぼちゃおじいさんじゃ。', 'おお、よく来たのう。わしが案内しよう。', 'こんにちは。今日はわしと一緒に進もう。'],
+            welcome: ['言葉の冒険へ ようこそ。', '一問ずつ、ゆっくり進めばよいのじゃ。', '言葉の力は、少しずつ育てていけばよい。'],
+            advice: ['迷ったときは、問題をもう一度聞くのじゃ。', 'あわてることはない。よく見て考えるのじゃ。', '自分のペースで取り組めば、それでよいのじゃ。'],
+            farewell: ['では、冒険を始めるとしよう！', 'さあ、旅立ちの時じゃ！', 'よし、準備は整った。出発じゃ！']
+          },
+          {
+            name: '黒丸', image: 'images/ivent/cat_05_1.png?v=69', rareImages: ['images/ivent/cat_05_2.png?v=69'],
+            greeting: ['にゃっ。ぼくは黒丸。よろしく。', '黒丸だよ。いっしょに進もう。', '来てくれてありがとう。黒丸だよ。'],
+            welcome: ['ことばクエストへようこそ。', 'ここでは自分のペースで練習できるよ。', '一緒にことばの冒険を楽しもう。'],
+            advice: ['ゆっくり見て、考えてみよう。', '難しいときは、ひとつずつ進もう。', 'あせらなくて大丈夫だよ。'],
+            farewell: ['それじゃあ、始めよう。', '準備ができたら出発だよ。', 'きみの挑戦を応援しているよ。']
+          },
+          {
+            name: 'こねこ', image: 'images/ivent/2_neko.PNG?v=69',
+            greeting: ['こんにちは！ いっしょに冒険しよう！', 'やった、来てくれたね！', 'ことばの冒険へようこそ！'],
+            welcome: ['今日も新しい言葉に出会おう！', 'ここでは少しずつ練習できるよ。', 'わからないときはゆっくり考えてね。'],
+            advice: ['まちがえても大丈夫。もう一度やってみよう。', '大事なところを見つけてみよう。', '自分のペースで進めようね。'],
+            farewell: ['さあ、冒険に出発だ！', '準備ができたら始めよう！', 'いっしょに頑張ろう！']
+          },
+          {
+            name: 'しらす隊長', image: 'images/ivent/3_sirasu.PNG?v=69',
+            greeting: ['冒険者よ、よく来た！', '本日の訓練を始めよう！', 'ことばの世界へ、ようこそ！'],
+            welcome: ['一問ずつ、落ち着いて進もう。', '言葉の力を試す時間だ。', 'きみの挑戦を歓迎する！'],
+            advice: ['問題文を最後まで読もう。', '考える時間も大切な訓練だ。', '選択肢の意味を順番に確認しよう。'],
+            farewell: ['準備完了！ 出発だ！', '訓練開始！ 健闘を祈る！', 'さあ、挑戦を始めよう！']
+          },
+          {
+            name: 'クロ', image: 'images/ivent/3_neko2.PNG?v=69',
+            greeting: ['ニャッ！ ことばの世界へようこそ。', '待ってたよ。今日は何問解けるかな？', 'やあ、また冒険に来たね！'],
+            welcome: ['一緒に言葉を探しに行こう。', '今日も新しい問題が待っているよ。', 'ゆっくり考えながら進もう。'],
+            advice: ['選択肢をゆっくり見くらべるんだ。', '大事な言葉を見つけてみよう。', 'ヒントを使って、もう一度考えてみてね。'],
+            farewell: ['さあ、冒険を始めよう！', '行こう！ 新しい問題が待っているよ！', '準備はいい？ スタート！']
+          },
+          {
+            name: 'ことばガイド', image: 'images/ivent/avatar_default_03.png?v=69',
+            greeting: ['ことばクエストへようこそ！', '今日も言葉の練習を始めましょう。', '冒険の準備ができました！'],
+            welcome: ['見て、聞いて、考えてみましょう。', '短い課題から始めても大丈夫です。', 'ご自身のペースで進めてください。'],
+            advice: ['ヒントは考える手助けとして使えます。', '分からないときは、もう一度聞いてみましょう。', '休みながら取り組んでも大丈夫です。'],
+            farewell: ['それでは、冒険を始めましょう！', '準備ができたらスタートです！', 'さあ、一緒に始めましょう！']
+          }
+        ];
+    var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
+    var profile = pick(profiles);
+    var isRare = Array.isArray(profile.rareImages) && profile.rareImages.length > 0 && Math.random() < 0.05;
+    var displayImage = isRare ? pick(profile.rareImages) : profile.image;
+    var backgroundFiles = ['back_1.jpg','back_2.jpg','back_3.jpg','back_4.jpg','back_5.jpg'];
+    var backgroundElement = document.querySelector('.event-bg');
+    if (backgroundElement) {
+      var lastBackground = '';
+      try { lastBackground = window.sessionStorage.getItem('kotoba-last-event-bg') || ''; } catch (e) {}
+      var backgroundChoices = backgroundFiles.filter(function(file){ return file !== lastBackground; });
+      var backgroundName = pick(backgroundChoices.length ? backgroundChoices : backgroundFiles);
+      try { window.sessionStorage.setItem('kotoba-last-event-bg', backgroundName); } catch (e) {}
+      backgroundElement.style.backgroundImage = 'linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.18)), url("images/ivent/' + backgroundName + '?v=69")';
+      backgroundElement.dataset.background = backgroundName;
+    }
+    var steps = [
+      { name: profile.name, text: pick(profile.greeting) },
+      { name: profile.name, text: pick(profile.welcome) },
+      { name: profile.name, text: pick(profile.advice) },
+      { name: profile.name, text: pick(profile.farewell) }
+    ];
+    var index = 0;
+    var timer = null;
+    var token = 0;
+    var moved = false;
+    var nameEl = document.getElementById('tutorialName');
+    var dialogEl = document.getElementById('tutorialDialog');
+    var nextBtn = document.getElementById('tutorialNextBtn');
+    var characterImg = document.getElementById('tutorialCharacterImage');
+    if (characterImg) {
+      characterImg.src = displayImage;
+      characterImg.alt = profile.name;
+      characterImg.onerror = function(){ if (displayImage !== profile.image) { this.onerror = null; this.src = profile.image; if (this.parentElement) this.parentElement.classList.remove('rare-event'); } };
+      if (characterImg.parentElement) characterImg.parentElement.classList.toggle('rare-event', isRare);
+    }
+
+    function stopEventSound() {
+      if (window.KQEventMessageSound) window.KQEventMessageSound.stop();
+    }
+    function playEventMessageSound() {
+      if (window.KQEventMessageSound) window.KQEventMessageSound.play();
+    }
+    function renderStep() {
+      if (!nameEl || !dialogEl || !nextBtn) return;
+      var step = steps[index];
+      nameEl.textContent = step.name;
+      if (timer) window.clearInterval(timer);
+      var thisToken = ++token;
+      var charIndex = 0;
+      dialogEl.textContent = '';
+      timer = window.setInterval(function () {
+        if (thisToken !== token) { window.clearInterval(timer); return; }
+        charIndex += 1;
+        dialogEl.textContent = step.text.slice(0, charIndex);
+        if (charIndex >= step.text.length) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+      }, 42);
+      playEventMessageSound();
+      nextBtn.textContent = index >= steps.length - 1 ? 'タイトルへ' : 'つぎへ';
+      nextBtn.setAttribute('aria-label', nextBtn.textContent);
+    }
+    function finish() {
+      if (moved) return;
+      moved = true;
+      if (timer) window.clearInterval(timer);
+      timer = null;
+      stopEventSound();
+      window.location.replace('index.html#title');
+    }
+    function advance() {
+      if (moved || !dialogEl) return;
+      var step = steps[index];
+      if (dialogEl.textContent !== step.text) {
+        if (timer) window.clearInterval(timer);
+        timer = null;
+        token += 1;
+        dialogEl.textContent = step.text;
+        return;
+      }
+      if (index < steps.length - 1) {
+        stopEventSound();
+        index += 1;
+        renderStep();
+      } else {
+        finish();
+      }
+    }
+    if (nextBtn) nextBtn.addEventListener('click', advance);
+    var skipBtn = document.getElementById('tutorialSkipBtn');
+    if (skipBtn) skipBtn.addEventListener('click', finish);
+    document.addEventListener('keydown', function (event) { if (event.key === 'Escape') finish(); });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stopEventSound(); });
+    window.addEventListener('pagehide', stopEventSound);
+    renderStep();
+  })();
+</script>
+</body>
+</html>
