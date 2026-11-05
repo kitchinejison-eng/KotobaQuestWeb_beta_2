@@ -1,0 +1,18 @@
+ことばクエスト V79 総合再構成版
+
+今回の統合基準
+・Android：ユーザー提供 KotobaQuest_Android_V76.zip のAndroid Studioプロジェクトを維持
+・Web：ユーザー提供 KotobaQuest_PC_V78_構音筋ビジュアルナビゲーション修正版.zip のWeb UIを統合
+・Android/Webの共通 app.js、style.css、発音トレーニング関連ファイルを同期
+・ユーザー提供の解剖図 assets/articulation-mouth-unlabelled.jpg と assets/articulation-mouth-labelled.png を両版へ同梱
+・アプリ内タイトル、Webキャッシュバスター、Android versionCode を V79 に統一
+・Android versionName は 1.3.9 に統一
+
+構音筋ビジュアルナビゲーション
+・練習課題に応じた解剖図の部位強調表示
+・マイク認識の開始・途中経過・終了に応じた表示
+・音声のみで舌や唇の実際の動きを直接追跡する機能ではありません。表示は学習用の概略ガイドです。
+
+検証
+・JS構文チェック、index.html の参照ファイル確認、ZIP整合性、Android/Web共通ファイル同期を実施
+・実機でのマイク権限、画面表示、発音認識は未確認

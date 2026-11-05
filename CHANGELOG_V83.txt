@@ -1,0 +1,5 @@
+Ver.83
+- Added Pictogram O/X 3D Quiz as the second genre card.
+- The 3D quiz awards one medal on completion using kotobaDungeonSaveV1 shared medal storage.
+- Added a return-to-genre-selection button.
+- New HTML filename is ASCII-only and source is UTF-8 without BOM.

@@ -1,0 +1,5 @@
+Ver.71
+- Social game style medals/gacha UI
+- PC 2-column dashboard and hover/ambient animations
+- animated avatar idle and gacha summon/reveal
+- reduced motion support
