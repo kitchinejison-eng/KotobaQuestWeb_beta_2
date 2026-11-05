@@ -334,7 +334,7 @@ function renderCopyV47(q){
   cell.strokes.forEach(function(s){s.points.forEach(function(p){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);});for(var i=1;i<s.points.length;i++){var a=s.points[i-1],b=s.points[i];length+=Math.hypot(b.x-a.x,b.y-a.y);}});
   return length>=40&&Math.max(maxX-minX,maxY-minY)>=32;
  }
- function clearInk(message){cells.forEach(function(c){c.strokes=[];c.activeStroke=null;draw(c);});changeId++;if(message)status.textContent=message;}
+ function clearInk(message,onlyIndex){cells.forEach(function(c,i){if(Number.isInteger(onlyIndex)&&onlyIndex!==i)return;c.strokes=[];c.activeStroke=null;draw(c);});changeId++;if(message)status.textContent=message;}
  function schedule(){
   clearTimeout(pendingTimer);pendingTimer=null;if(!active()||answered||checking||retryTimer!==null)return;
   if(!cells.every(enough)){status.textContent='各枠に文字を書いてください。すべて書けたら自動で照合します。';return;}
@@ -352,7 +352,8 @@ function renderCopyV47(q){
   function end(e){if(!cell.activeStroke||cell.pointer!==e.pointerId)return;cell.activeStroke.points.push(pos(cell,e));cell.activeStroke=null;cell.pointer=null;draw(cell);schedule();}
   canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
   var undo=btn('↶ 1画戻す','v47-copy-undo',function(){if(!active()||answered||checking||retryTimer!==null)return;cell.strokes.pop();draw(cell);changeId++;schedule();});
-  outer.append(heading,canvas,undo);board.appendChild(outer);draw(cell);
+  var erase=btn('この枠を消す','v47-copy-undo',function(){if(!active()||answered||checking||retryTimer!==null)return;clearTimeout(pendingTimer);pendingTimer=null;clearInk((i+1)+'文字目を消しました。書き直してください。',i);});
+  outer.append(heading,canvas,undo,erase);board.appendChild(outer);draw(cell);
  });
  async function recognizeWithBrowser(){
   var recognizer=await navigator.createHandwritingRecognizer({languages:['ja']});
@@ -427,8 +428,10 @@ function renderCopyV47(q){
   }catch(error){
    if(!active()||answered)return;
    var code=String(error&&error.message||'');
-   status.textContent=code==='ocr-low-confidence'?'文字を確実に読み取れませんでした。今回の挑戦回数には含めません。大きく丁寧に書き直してください。':code==='handwriting-unavailable'?'手書き認識に対応していません。ブラウザの更新と端末環境を確認してください。':'日本語の手書き認識を準備できませんでした。初回はインターネット接続が必要です。接続を確認し、再度書いてください（未採点）。';
-   if(code==='ocr-low-confidence')retryTimer=setTimeout(function(){retryTimer=null;if(active()&&!answered)clearInk('文字を読み取れませんでした。もう一度、各枠に書いてください。');},1700);
+   var failedIndex=Number.isInteger(error&&error.cellIndex)?error.cellIndex:null;
+   var failedLabel=failedIndex!==null?(failedIndex+1)+'文字目':'文字';
+   status.textContent=code==='ocr-low-confidence'?failedLabel+'を読み取れませんでした。挑戦回数には含めません。読み取れなかった枠だけ書き直してください。':code==='handwriting-unavailable'?'手書き認識に対応していません。ブラウザの更新と端末環境を確認してください。':'日本語の手書き認識を準備できませんでした。初回はインターネット接続が必要です。接続を確認し、再度書いてください（未採点）。';
+   if(code==='ocr-low-confidence')retryTimer=setTimeout(function(){retryTimer=null;if(active()&&!answered)clearInk(failedLabel+'を読み取れませんでした。'+(failedIndex!==null?'この枠':'各枠')+'だけ書き直してください。',failedIndex);},1400);
   }finally{checking=false;}
  }
  var actions=el('div','v47-action-row');actions.appendChild(btn('🧽 全部消す','v47-secondary-button',function(){if(!active()||answered||checking||retryTimer!==null)return;clearTimeout(pendingTimer);pendingTimer=null;clearInk('消しました。見本を見て書き直してください。');}));
