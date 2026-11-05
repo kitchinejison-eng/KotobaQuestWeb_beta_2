@@ -1,4 +1,4 @@
-/* Kotoba Quest beta8.6: shared Japanese OCR for browser and Android WebView.
+/* Kotoba Quest beta8.7: shared Japanese OCR for browser and Android WebView.
  * Tesseract.js v7 + its WASM core are packaged locally.  The Japanese model
  * is downloaded on first use and kept in the browser's IndexedDB cache.
  * Do not pass the expected answer to any recognizer or image preprocessor.
@@ -50,8 +50,11 @@
   if(typeof onProgress==='function')return enginePromise.finally(function(){var index=listeners.indexOf(onProgress);if(index!==-1)listeners.splice(index,1);});
   return enginePromise;
  }
- // Render only actual writing strokes.  The guide grid is never supplied to OCR.
- function makeImage(cell){
+ // Render only actual writing strokes. Never send the guide grid to OCR.
+ // In beta8.6 the line width was scaled with the coordinates, turning small
+ // handwriting into very thick, closed-up glyphs. Keep its final pixel width
+ // constant while normalizing the writing area.
+ function makeImage(cell,variant){
   var strokes=(cell&&cell.strokes)||[],points=[];
   strokes.forEach(function(s){(s.points||[]).forEach(function(p){if(Number.isFinite(p.x)&&Number.isFinite(p.y))points.push(p);});});
   if(!points.length)throw new Error('ocr-empty-ink');
@@ -61,33 +64,65 @@
   var ctx=canvas.getContext('2d');if(!ctx)throw new Error('ocr-canvas-unavailable');
   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,384,384);
   var spanX=Math.max(12,x2-x1),spanY=Math.max(12,y2-y1);
-  var scale=Math.min(304/spanX,304/spanY);
-  ctx.translate((384-spanX*scale)/2-x1*scale,(384-spanY*scale)/2-y1*scale);
-  ctx.scale(scale,scale);ctx.strokeStyle='#101010';ctx.fillStyle='#101010';ctx.lineWidth=8;ctx.lineCap='round';ctx.lineJoin='round';
+  var imageSize=variant==='compact'?268:300;
+  var scale=Math.min(imageSize/spanX,imageSize/spanY);
+  var left=(384-(x2-x1)*scale)/2-x1*scale;
+  var top=(384-(y2-y1)*scale)/2-y1*scale;
+  function map(p){return {x:left+p.x*scale,y:top+p.y*scale};}
+  ctx.strokeStyle='#101010';ctx.fillStyle='#101010';ctx.lineWidth=variant==='compact'?8:11;
+  ctx.lineCap='round';ctx.lineJoin='round';
   strokes.forEach(function(s){var ps=(s.points||[]).filter(function(p){return Number.isFinite(p.x)&&Number.isFinite(p.y);});if(!ps.length)return;
-   ctx.beginPath();ctx.moveTo(ps[0].x,ps[0].y);for(var i=1;i<ps.length;i++)ctx.lineTo(ps[i].x,ps[i].y);
-   if(ps.length===1){ctx.arc(ps[0].x,ps[0].y,4,0,2*Math.PI);ctx.fill();}else ctx.stroke();
+   var start=map(ps[0]);ctx.beginPath();ctx.moveTo(start.x,start.y);
+   for(var i=1;i<ps.length;i++){var point=map(ps[i]);ctx.lineTo(point.x,point.y);}
+   if(ps.length===1){ctx.arc(start.x,start.y,ctx.lineWidth/2,0,2*Math.PI);ctx.fill();}else ctx.stroke();
   });
   return canvas.toDataURL('image/png');
  }
  function normalized(s){return String(s||'').normalize('NFKC').replace(/[\s\r\n\u3000「」『』。、,.・!！?？]/g,'');}
+ // Multiple independent OCR passes, without ever supplying the exercise answer.
+ // A second segmentation mode and a thinner image rescue faint/irregular ink.
+ // Low-confidence garbage remains ungraded, rather than inflating wrong counts.
+ async function recognizeCell(worker,cell,index){
+  var readings=[];
+  async function pass(variant,mode){
+   await worker.setParameters({tessedit_pageseg_mode:String(mode)});
+   var result=await worker.recognize(makeImage(cell,variant));
+   var text=normalized(result&&result.data&&result.data.text);
+   var confidence=Number(result&&result.data&&result.data.confidence)||0;
+   if(Array.from(text).length===1&&confidence>0)readings.push({text:text,confidence:confidence});
+   return {text:text,confidence:confidence};
+  }
+  var primary=await pass('regular',root.Tesseract.PSM.SINGLE_CHAR);
+  if(Array.from(primary.text).length===1&&primary.confidence>=60)
+   return {text:primary.text,candidates:[primary.text],confidence:primary.confidence,passes:1};
+  notice('文字の形を変えて再確認しています（'+(index+1)+'文字目）…');
+  await pass('regular',root.Tesseract.PSM.SINGLE_WORD||'8');
+  var strongest=readings.reduce(function(best,r){return Math.max(best,r.confidence);},0);
+  if(strongest<55)await pass('compact',root.Tesseract.PSM.SINGLE_CHAR);
+  var grouped=Object.create(null);
+  readings.forEach(function(r){if(!grouped[r.text])grouped[r.text]={text:r.text,max:0,count:0};
+   grouped[r.text].count++;grouped[r.text].max=Math.max(grouped[r.text].max,r.confidence);});
+  var ranked=Object.keys(grouped).map(function(key){return grouped[key];}).sort(function(a,b){
+   return (b.max+Math.min(b.count-1,2)*8)-(a.max+Math.min(a.count-1,2)*8);
+  });
+  var best=ranked[0];
+  if(!best||!(best.max>=22||(best.count>=2&&best.max>=10))){
+   var error=new Error('ocr-low-confidence');error.cellIndex=index;throw error;
+  }
+  return {text:best.text,candidates:ranked.map(function(r){return r.text;}),confidence:best.max,passes:readings.length};
+ }
  async function recognize(cells,onProgress){
   if(!Array.isArray(cells)||cells.length<1||cells.length>4)throw new Error('ocr-invalid-input');
   if(typeof onProgress==='function')listeners.push(onProgress);
   try{
-   var worker=await prepare();var texts=[],candidates=[],confidences=[];
+   var worker=await prepare();var texts=[],candidates=[],confidences=[],passes=[];
    for(var i=0;i<cells.length;i++){
     notice('手書き文字を認識しています（'+(i+1)+'/'+cells.length+'文字）…');
-    var picture=makeImage(cells[i]);
-    var result=await worker.recognize(picture);
-    var text=normalized(result&&result.data&&result.data.text);
-    var confidence=Number(result&&result.data&&result.data.confidence)||0;
-    // No forced success on ink quantity or target-dependent character filtering.
-    // Invalid/uncertain OCR is not scored as an incorrect handwritten response.
-    if(Array.from(text).length!==1||confidence<25)throw new Error('ocr-low-confidence');
-    texts.push(text);candidates.push([text]);confidences.push(confidence);
+    var reading=await recognizeCell(worker,cells[i],i);
+    texts.push(reading.text);candidates.push(reading.candidates);
+    confidences.push(reading.confidence);passes.push(reading.passes);
    }
-   return {texts:texts,cellCandidates:candidates,phraseCandidates:[],ocrConfidence:confidences,recognitionEngine:'tesseract-jpn-v7'};
+   return {texts:texts,cellCandidates:candidates,phraseCandidates:[],ocrConfidence:confidences,ocrPasses:passes,recognitionEngine:'tesseract-jpn-v7-multipass'};
   }finally{
    if(typeof onProgress==='function'){var index=listeners.indexOf(onProgress);if(index!==-1)listeners.splice(index,1);}
   }
