@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kotoba-quest-beta87-multipass-ocr';
+const CACHE_NAME = 'kotoba-quest-beta88-copy-note';
 // Keep the articulation random-quiz assets and all new JPG question cards available offline.
 const QUIZ_JPG_FILES = {
   matching: 'apple banana mandarin coffee sakura handwash rice bath sunny cup towel plate enpitsu bus kuruma kutu kasa kuma neko mizu tokei kaban hon isu sakuranbo smartphone jitensha tamago pan sekken megane'.split(' '),
@@ -29,7 +29,7 @@ const APP_SHELL = [
   './articulation-random-beta4.css?v=4',
   './responsive-beta6.css?v=6',
   './browser-responsive.css?v=89',
-  './v47-improvements.css?v=beta84-ink',
+  './v47-improvements.css?v=beta88-copy-note',
   './pronunciation-training.css?v=89',
   './encoding-safe.js',
   './android-bridge-android.js?v=beta84-ink',
@@ -52,7 +52,7 @@ const APP_SHELL = [
   './ocr/browser-japanese-ocr.js?v=beta87-multipass-ocr',
   './ocr/vendor/tesseract.min.js',
   './ocr/vendor/worker.min.js',
-  './v47-improvements.js?v=beta87-multipass-ocr',
+  './v47-improvements.js?v=beta88-copy-note',
   './v57-task-rebuild.js?v=beta8-fixes',
   './pronunciation-training.js?v=69',
   ...QUIZ_JPG_ASSETS,

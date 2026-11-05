@@ -430,12 +430,16 @@ function renderCopyV47(q){
    var code=String(error&&error.message||'');
    var failedIndex=Number.isInteger(error&&error.cellIndex)?error.cellIndex:null;
    var failedLabel=failedIndex!==null?(failedIndex+1)+'文字目':'文字';
-   status.textContent=code==='ocr-low-confidence'?failedLabel+'を読み取れませんでした。挑戦回数には含めません。読み取れなかった枠だけ書き直してください。':code==='handwriting-unavailable'?'手書き認識に対応していません。ブラウザの更新と端末環境を確認してください。':'日本語の手書き認識を準備できませんでした。初回はインターネット接続が必要です。接続を確認し、再度書いてください（未採点）。';
-   if(code==='ocr-low-confidence')retryTimer=setTimeout(function(){retryTimer=null;if(active()&&!answered)clearInk(failedLabel+'を読み取れませんでした。'+(failedIndex!==null?'この枠':'各枠')+'だけ書き直してください。',failedIndex);},1400);
+   status.textContent=code==='ocr-low-confidence'?'文字をうまく読み取れませんでした。'+(failedIndex!==null?failedLabel+'の枠だけ':'各枠に')+'、もう一度ゆっくり書いてください。読み取り失敗は不正解に含めません。':code==='handwriting-unavailable'?'手書き認識に対応していません。Google ChromeまたはMicrosoft Edgeの最新版でお試しください。':'日本語の手書き認識を準備できませんでした。初回はインターネット接続が必要です。接続を確認し、再度書いてください（未採点）。';
+   if(code==='ocr-low-confidence')retryTimer=setTimeout(function(){retryTimer=null;if(active()&&!answered)clearInk('文字をうまく読み取れませんでした。'+(failedIndex!==null?failedLabel:'各枠')+'をもう一度ゆっくり書いてください。',failedIndex);},1400);
   }finally{checking=false;}
  }
  var actions=el('div','v47-action-row');actions.appendChild(btn('🧽 全部消す','v47-secondary-button',function(){if(!active()||answered||checking||retryTimer!==null)return;clearTimeout(pendingTimer);pendingTimer=null;clearInk('消しました。見本を見て書き直してください。');}));
- wrap.append(board,actions,attemptLabel,status);area.appendChild(wrap);
+ var notice=el('aside','v47-copy-dev-notice');notice.setAttribute('role','note');
+ notice.appendChild(el('p','v47-copy-dev-title','ⓘ 手書き文字の判定について（開発中）'));
+ notice.appendChild(el('p','v47-copy-dev-description','この機能は現在開発中です。正しく書いていても、文字の形や書き方によってAIが読み取れない場合があります。読み取れないときは、文字を大きく、ゆっくり書き直してください。'));
+ notice.appendChild(el('p','v47-copy-dev-browser','推奨ブラウザ：Google Chrome／Microsoft Edge（最新版）'));
+ wrap.append(board,actions,attemptLabel,status,notice);area.appendChild(wrap);
  if(window.KotobaJapaneseOCR&&window.KotobaJapaneseOCR.supported()){
   status.textContent='日本語の手書きOCRに対応しています。初回は認識モデルを読み込みます。各枠に文字を書いてください。';
   window.KotobaJapaneseOCR.prepare(function(message){if(active()&&!answered)status.textContent=message;}).catch(function(){

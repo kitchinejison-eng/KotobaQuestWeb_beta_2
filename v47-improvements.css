@@ -39,6 +39,11 @@
 .v47-copy-cell-label{color:#315e80;font-size:clamp(14px,1.8vw,19px);font-weight:850;margin:2px 0 8px;}
 .v47-copy-pad{display:block;width:100%;height:auto;aspect-ratio:1 / 1;touch-action:none;user-select:none;box-sizing:border-box;background:#fff;border:2px solid #9bb9ce;border-radius:12px;cursor:crosshair;}
 .v47-copy-undo{min-height:42px;min-width:110px;width:100%;margin:8px 0 0;padding:7px 5px;border:1px solid #b2cbde;border-radius:10px;background:#fff;color:#244d6b;font-size:clamp(14px,1.6vw,17px);font-weight:800;cursor:pointer;}
+.v47-copy-dev-notice{box-sizing:border-box;margin:16px auto 2px;max-width:900px;padding:12px 16px;background:#eff7ff;border:1px solid #c6dff4;border-left:4px solid #4289c2;border-radius:12px;color:#26445e;text-align:left;line-height:1.65;}
+.v47-copy-dev-notice p{margin:0;}
+.v47-copy-dev-notice .v47-copy-dev-title{font-weight:800;font-size:clamp(14px,1.7vw,17px);margin-bottom:4px;}
+.v47-copy-dev-notice .v47-copy-dev-description{font-size:clamp(13px,1.5vw,15px);}
+.v47-copy-dev-notice .v47-copy-dev-browser{margin-top:6px;border-top:1px solid #d5e6f5;padding-top:6px;color:#48647b;font-size:clamp(12px,1.4vw,14px);}
 .v47-copy-attempt{text-align:center;color:#264866;font-weight:900;font-size:20px;margin:12px 0 0;}
 .v47-copy-panel .v47-status{min-height:2.8em;font-size:clamp(15px,1.8vw,18px);overflow-wrap:anywhere;}
 .v47-copy-cells.v47-copy-count-1{max-width:280px;}
