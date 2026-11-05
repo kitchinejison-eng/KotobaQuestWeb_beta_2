@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1976d2">
+  <link rel="manifest" href="manifest.webmanifest?v=105">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <meta name="description" content="ことば・読み・発話・会話の練習アプリ">
+  <title>ことばクエスト 開発版｜トレーニング</title>
+  <link rel="stylesheet" href="style.css?v=beta85-scene-quiz">
+  <link rel="stylesheet" href="browser-responsive.css?v=89">
+  <link rel="stylesheet" href="v47-improvements.css?v=beta84-ink">
+  <link rel="stylesheet" href="pronunciation-training.css?v=89">
+  <link rel="stylesheet" href="ai-download-gate.css?v=99">
+  <link rel="stylesheet" href="daily-streak.css?v=108">
+  <link rel="stylesheet" href="title-responsive-beta3.css?v=3">
+  <link rel="stylesheet" href="articulation-random-beta4.css?v=4">
+  <link rel="stylesheet" href="responsive-beta6.css?v=6">
+<style>.quiz-mascot-strip{display:flex;align-items:center;gap:12px;padding:8px 12px;margin-bottom:12px;background:#f1f9ff;border:1px solid #c5e3f8;border-radius:16px;color:#174564;font-weight:700;font-size:clamp(13px,2.9vw,17px)}.quiz-buddy-icons{display:flex;gap:4px;margin-left:auto}.quiz-buddy-icons img{width:41px;height:41px;object-fit:contain}@media(max-width:470px){.quiz-buddy-icons{display:none}}.quiz-mascot-strip img{object-fit:contain;flex:0 0 62px;max-width:20vw;height:62px}@media(max-width:400px){.quiz-mascot-strip{gap:8px;padding:5px 8px}.quiz-mascot-strip img{width:48px;height:48px;flex-basis:48px}}</style>
+<style>.menu-button[hidden]{display:none!important}#installWebAppMessage{margin:8px 8px 0;font-size:13px;color:#e7f7ff;text-align:center;line-height:1.5}</style>
+</head>
+<body data-theme="blue">
+
+<main class="app app-native">
+
+  <!-- 起動演出は logo.html と opening-event.html に分離しました。 -->
+
+  <section id="titleScreen" class="screen title-screen" aria-label="ことばクエスト タイトル画面">
+    <div class="title-bubble-field" aria-hidden="true">
+      <span class="title-bubble b1"></span><span class="title-bubble b2"></span><span class="title-bubble b3"></span><span class="title-bubble b4"></span>
+      <span class="title-bubble b5"></span><span class="title-bubble b6"></span><span class="title-bubble b7"></span><span class="title-bubble b8"></span>
+      <span class="title-bubble b9"></span><span class="title-bubble b10"></span><span class="title-bubble b11"></span><span class="title-bubble b12"></span>
+    </div>
+    <div class="title-layout">
+      <div class="title-identity">
+        <div class="title-brand">エジソン・キッチン</div>
+        <div class="title-logo-wrap" aria-hidden="true">
+          <div class="title-mark"><span class="title-mark-dot dot-a"></span><span class="title-mark-dot dot-b"></span><span class="title-mark-dot dot-c"></span><span class="title-mark-letter">こ</span><span class="title-mark-spark">✦</span></div>
+        </div>
+        <h1 class="title-name" aria-label="ことばクエスト">ことば<span>クエスト</span><small class="title-dev-badge">開発版</small></h1>
+        <p class="title-sub">ことばをつないで、もっと話せる自分に</p>
+        <div id="dailyStreakHomeBadge" aria-live="polite">🌸 今日のレッスン完了で1日目</div>
+      </div>
+
+      <div class="title-actions">
+        <nav class="title-menu" aria-label="ことばクエスト メインメニュー">
+          <button type="button" class="menu-button menu-primary" id="titleStartBtn">
+            <span class="menu-icon" aria-hidden="true">▶</span><span><strong>始める</strong><small>ジャンルを選ぶ</small></span>
+          </button>
+          <button type="button" class="menu-button menu-dungeon" id="titleDungeonBtn">
+            <span class="menu-icon" aria-hidden="true">🗝️</span><span><strong>コトバ・ダンジョン</strong><small>アバターを育ててレベルアップ</small></span>
+          </button>
+          <button type="button" class="menu-button menu-community" id="titleCommunityBtn">
+            <span class="menu-icon" aria-hidden="true">💬</span><span><strong>みんなの広場</strong><small>共有・交流（試作）</small></span>
+          </button>
+          <button type="button" class="menu-button menu-print" id="titlePrintDrillBtn">
+            <span class="menu-icon" aria-hidden="true">📄</span><span><strong>紙のドリルを作る・印刷</strong><small>プリント教材を作る</small></span>
+          </button>
+          <button type="button" class="menu-button menu-record" id="titleRecordsBtn">
+            <span class="menu-icon" aria-hidden="true">📊</span><span><strong>トレーニング記録を見る</strong><small>これまでの記録を確認</small></span>
+          </button>
+          <button type="button" class="menu-button menu-settings" id="titleSettingsBtn">
+            <span class="menu-icon" aria-hidden="true">⚙️</span><span><strong>設定</strong><small>音・マイク・色・AI</small></span>
+          </button>
+        </nav>
+        <div class="title-install">
+          <button type="button" class="menu-button menu-record" id="installWebAppBtn" hidden>
+            <span class="menu-icon" aria-hidden="true">📲</span><span><strong>ブラウザ版をアプリとして追加</strong><small>ホーム画面からすぐ開く</small></span>
+          </button>
+          <p id="installWebAppMessage" role="status" aria-live="polite" hidden></p>
+        </div>
+      </div>
+    </div>
+    <div class="title-bottom">
+      <div class="music-mini">
+        <span>♫</span><span id="musicMiniLabel">やさしい音楽</span>
+        <button type="button" id="musicMiniBtn" class="mini-toggle" aria-label="やさしい音楽を切り替える">ON</button>
+      </div>
+      <p class="title-footer">制作：エジソン・キッチン</p>
+    </div>
+  </section>
+
+  <!-- 初回ユーザー設定：記録とExcel出力に使うプロフィール -->
+  <section id="userSetup" class="screen user-profile-screen" aria-label="ユーザー設定">
+    <div class="user-profile-card">
+      <div class="user-profile-icon" aria-hidden="true">👤</div>
+      <p class="user-profile-kicker">KOTOBA QUEST</p>
+      <h1 id="userSetupHeading">はじめてのユーザー設定</h1>
+      <p id="userSetupIntro" class="user-profile-intro">トレーニング記録とExcel出力に反映する情報を設定します。</p>
+      <form id="userProfileForm" novalidate>
+        <label class="user-profile-label" for="setupUserDisplayName">記録に表示する名前 <span>必須</span></label>
+        <input id="setupUserDisplayName" class="user-profile-input" type="text" maxlength="60" autocomplete="nickname" placeholder="例：ことば練習中" required>
+        <p class="user-profile-help">本名でなく、ニックネームやイニシャルでも設定できます。</p>
+        <label class="user-profile-label" for="setupUserRecordCode">利用者ID・管理番号 <span>任意</span></label>
+        <input id="setupUserRecordCode" class="user-profile-input" type="text" maxlength="40" autocomplete="off" placeholder="例：KQ-001">
+        <p class="user-profile-help">必要な場合だけ入力してください。診断名など、Excelで共有したくない情報は入力しないでください。</p>
+        <div class="user-profile-local-note">設定と記録は、この端末のブラウザー内に保存されます。Excelへ出力したファイルは、保存先や共有先にご注意ください。</div>
+        <p id="userProfileStatus" class="user-profile-status" role="status" aria-live="polite"></p>
+        <div class="user-profile-actions">
+          <button id="saveUserProfileBtn" class="user-profile-primary" type="submit">設定を保存して始める</button>
+          <button id="guestUserProfileBtn" class="user-profile-secondary" type="button">ゲストとして始める</button>
+          <button id="cancelUserProfileBtn" class="user-profile-quiet" type="button" hidden>変更をやめて戻る</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 当事者コミュニティ掲示板（Ver.40 試作） -->
+  <section id="communityBoard" class="screen community-screen" aria-label="みんなの広場">
+    <div class="screen-head community-screen-head">
+      <button type="button" class="back-button" id="communityBackBtn" aria-label="タイトルに戻る">←</button>
+      <div class="screen-head-title">みんなの広場</div>
+      <span class="community-head-mark" aria-hidden="true">💬</span>
+    </div>
+
+    <div class="community-intro">
+      <h2>みんなの広場</h2>
+      <p>日々の出来事や工夫を、自分のペースで共有しましょう。</p>
+    </div>
+
+    <div class="community-trial-notice" role="note">
+      <strong>試作版について</strong>
+      <p>投稿は今の端末内に保存されます。現在は、ほかの人の端末とはまだ共有されません。オンライン交流にはサーバー接続が必要です。</p>
+    </div>
+
+    <section class="community-panel" aria-labelledby="communityProfileTitle">
+      <h3 id="communityProfileTitle">あなたのプロフィール</h3>
+      <label class="community-field-label" for="communityNickname">ニックネーム（本名は使わないでください）</label>
+      <input id="communityNickname" class="community-text-input" type="text" maxlength="16" autocomplete="nickname" placeholder="例：ことば練習中">
+      <div class="community-field-label">アバターを選んでください</div>
+      <div id="communityAvatarChoices" class="community-avatar-choices" role="group" aria-label="アバター選択">
+        <button type="button" class="community-avatar-choice" data-avatar="🌱" aria-label="芽">🌱</button>
+        <button type="button" class="community-avatar-choice" data-avatar="🙂" aria-label="笑顔">🙂</button>
+        <button type="button" class="community-avatar-choice" data-avatar="🌸" aria-label="花">🌸</button>
+        <button type="button" class="community-avatar-choice" data-avatar="🐱" aria-label="ねこ">🐱</button>
+        <button type="button" class="community-avatar-choice" data-avatar="⭐" aria-label="星">⭐</button>
+        <button type="button" class="community-avatar-choice" data-avatar="☕" aria-label="コーヒー">☕</button>
+      </div>
+      <button type="button" id="communityProfileSaveBtn" class="community-button community-button-secondary">プロフィールを保存</button>
+      <p id="communityProfileStatus" class="community-small-status" aria-live="polite"></p>
+    </section>
+
+    <section class="community-panel" aria-labelledby="communityComposeTitle">
+      <h3 id="communityComposeTitle">投稿を書く</h3>
+      <label class="community-field-label" for="communityCategory">投稿の種類</label>
+      <select id="communityCategory" class="community-text-input">
+        <option value="日常">日常の出来事</option>
+        <option value="工夫">生活の工夫</option>
+        <option value="言葉の練習">言葉の練習</option>
+        <option value="悩み・相談">悩み・相談</option>
+        <option value="うれしかったこと">うれしかったこと</option>
+      </select>
+      <label class="community-field-label" for="communityPostText">本文</label>
+      <textarea id="communityPostText" class="community-post-textarea" maxlength="1000" rows="4" placeholder="今日あったこと、役に立った工夫などを書いてみましょう。"></textarea>
+      <div class="community-compose-footer">
+        <span id="communityCharCount" class="community-char-count">0 / 1000</span>
+        <button type="button" id="communityPostSubmitBtn" class="community-button community-button-primary">投稿する</button>
+      </div>
+      <p id="communityPostStatus" class="community-small-status" aria-live="polite"></p>
+    </section>
+
+    <section class="community-posts-section" aria-labelledby="communityPostsTitle">
+      <div class="community-posts-heading">
+        <h3 id="communityPostsTitle">投稿一覧</h3>
+        <span id="communityPostTotal" class="community-post-total">0件</span>
+      </div>
+      <div id="communityFilters" class="community-filters" aria-label="投稿の絞り込み">
+        <button type="button" class="community-filter active" data-filter="すべて">すべて</button>
+        <button type="button" class="community-filter" data-filter="日常">日常</button>
+        <button type="button" class="community-filter" data-filter="工夫">生活の工夫</button>
+        <button type="button" class="community-filter" data-filter="言葉の練習">言葉の練習</button>
+        <button type="button" class="community-filter" data-filter="悩み・相談">悩み・相談</button>
+        <button type="button" class="community-filter" data-filter="うれしかったこと">うれしかったこと</button>
+      </div>
+      <div id="communityPostList" class="community-post-list" aria-live="polite"></div>
+    </section>
+
+    <div class="community-safety-note">
+      <strong>安心して利用するために</strong>
+      <p>本名・住所・電話番号など、個人が特定される情報は投稿しないでください。体調や生活に関する大切な相談は、支援者や専門家にも相談してください。試作版の通報は管理者には届きません。</p>
+    </div>
+  </section>
+
+  <!-- ジャンル選択 -->
+  <section id="home" class="screen">
+    <div class="screen-head">
+      <button type="button" class="back-button" id="homeToTitleBtn">←</button>
+      <div class="screen-head-title">ことばクエスト 開発版</div>
+      <button type="button" class="head-icon-button" id="genreSettingsBtn" aria-label="設定">⚙️</button>
+    </div>
+    <div class="screen-intro">
+      <h2>ジャンルを選んでください（7ジャンル・30課題）</h2>
+      <p>できるところから、ひとつずつ進めましょう。</p>
+    </div>
+    <div class="training-needs-notice" role="note">
+      <strong>関連する練習分野を表示しています</strong>
+      <p>各ジャンルと課題のラベルは、練習内容との関連を示す目安です。診断や治療効果、対象者の限定を意味しません。</p>
+      <details class="training-needs-guide">
+        <summary>高次脳機能障害・失語症・知的障害・吃音・認知機能の維持について</summary>
+        <div id="trainingNeedsGuideItems" class="training-needs-guide-items"></div>
+      </details>
+    </div>
+    <div id="categoryGrid" class="category-grid" aria-label="トレーニングカテゴリ"></div>
+
+    <!-- JavaScript互換用。見た目では使いません。 -->
+    <div id="activityPanel" class="activity-panel-native hidden">
+      <div class="activity-head">
+        <button type="button" class="back-button" id="allGenreBtn">←</button>
+        <div>
+          <div id="selectedGenreIcon" class="activity-head-icon">🧠</div>
+          <h3 id="selectedGenreName">課題を選択</h3>
+        </div>
+      </div>
+      <p id="selectedGenreDescription" class="muted"></p>
+      <div id="activityCards" class="activity-grid"></div>
+      <select id="activitySelect" class="compat-hidden"><option value="">課題を選んでください</option></select>
+      <div id="activityDescription" class="compat-hidden"></div>
+      <button id="startSelectedBtn" class="compat-hidden" disabled>開始</button>
+    </div>
+  </section>
+
+  <!-- トレーニング -->
+
+
+  <section id="game" class="screen">
+    <div class="screen-head game-head">
+      <button class="back-button" id="homeBtn" type="button">←</button>
+      <div id="trainingTitle" class="screen-head-title">トレーニング</div>
+      <div class="head-status"><span id="progress">1 / 10</span><span id="score">正解 0</span></div>
+    </div>
+    <div class="quiz-card">
+      <div id="categoryLabel" class="category-label">トレーニング</div>
+      <div id="questionLabel" class="question-label">問題</div>
+      <div id="visualArea" class="visual-area">
+        <img id="questionImage" class="question-image hidden" alt="問題の画像">
+        <div id="emoji" class="emoji">❓</div>
+      </div>
+      <div class="voice-row">
+        <button id="speakBtn" class="outline-button" type="button">🔊 お手本を聞く</button>
+        <span id="voiceStatus" class="voiceStatus" aria-live="polite"></span>
+      </div>
+      <div id="instruction" class="instruction hidden"></div>
+      <div id="promptText" class="prompt-text"></div>
+      <button id="hintBtn" class="hint-button" type="button">💡 ヒント</button>
+      <div id="hint" class="hint hidden"></div>
+      <div id="answerArea" class="answer-area"></div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <button id="nextBtn" class="primary-button hidden" type="button">次へ →</button>
+    </div>
+  </section>
+
+  <!-- 結果 -->
+  <section id="result" class="screen">
+    <div class="screen-head">
+      <div class="screen-head-title">トレーニング結果</div>
+    </div>
+    <div class="result-card">
+      <div id="resultIcon" class="result-icon">🎉</div>
+      <h2>おつかれさまでした</h2>
+      <div id="resultDailyStreak" class="daily-streak-slot"></div>
+      <div id="resultTitle" class="result-title">トレーニング</div>
+      <div id="resultScore" class="big-score">0 / 10</div>
+      <div id="resultRate" class="rate">正答率 0%</div>
+      <p id="resultMessage" class="result-message"></p>
+      <div class="result-actions">
+        <button class="primary-button" id="retryBtn" type="button">もう一度挑戦</button>
+        <button class="secondary-button" id="resultHomeBtn" type="button">ジャンル選択へ</button>
+        <button class="secondary-button" id="resultRecordBtn" type="button">記録を見る</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 記録 -->
+  <section id="records" class="screen">
+    <div class="screen-head">
+      <button class="back-button" id="recordsHomeBtn" type="button">←</button>
+      <div class="screen-head-title">トレーニング記録</div>
+      <div></div>
+    </div>
+    <div class="records-card">
+      <section id="recordsDailyStreak" class="records-streak-panel" aria-label="毎日の連続記録">
+        <div class="records-streak-title">🌸 毎日の連続記録 <small>レッスンを1日1回完了すると増えます</small></div>
+        <div class="records-streak-stats">
+          <div><strong id="recordsStreakCurrent">0<small>日</small></strong><span>現在の連続記録</span></div>
+          <div><strong id="recordsStreakBest">0<small>日</small></strong><span>自己ベスト</span></div>
+          <div><strong id="recordsStreakToday">未達成</strong><span>今日の達成状況</span></div>
+        </div>
+        <p id="recordsStreakNotice" class="records-streak-notice">ゲーム・トレーニングの完了記録と連動しています。</p>
+        <button type="button" id="previewStreakBtn" class="records-streak-preview">🌸 ガッツポーズ演出を試す</button>
+      </section>
+      <div class="record-month-row">
+        <button id="prevMonthBtn" class="small-button" type="button">←</button>
+        <strong id="recordMonthLabel"></strong>
+        <button id="todayMonthBtn" class="small-button" type="button">今日</button>
+        <button id="nextMonthBtn" class="small-button" type="button">→</button>
+      </div>
+      <div id="recordsUserSummary" class="records-user-summary" role="status"></div>
+      <div id="monthStats" class="month-stats"></div>
+      <div id="calendar" class="calendar"></div>
+      <p class="records-calendar-legend">🌸 レッスン完了日　✅ 詳細なトレーニング記録がある日</p>
+      <div class="record-divider"></div>
+      <h3 id="selectedDateLabel">今日の記録</h3>
+      <p id="selectedDateStreak" class="record-day-streak" hidden></p>
+      <div id="dayStats" class="record-stats"></div>
+      <div id="dayRecordList" class="day-record-list"></div>
+      <label class="record-note-label" for="dayNote">今日のメモ</label>
+      <textarea id="dayNote" class="record-note" rows="4" placeholder="メモを入力できます。自動保存されます。"></textarea>
+      <div id="dayNoteStatus" class="note-status"></div>
+      <div class="export-buttons">
+        <button id="exportDayBtn" class="primary-button" type="button">この日の記録をExcel出力</button>
+        <button id="exportMonthBtn" class="secondary-button" type="button">この1か月の記録をExcel出力</button>
+      </div>
+      <button id="clearRecordsBtn" class="danger-button" type="button">トレーニング記録・メモを削除</button>
+      <p class="records-clear-note">花の連続記録は別に保存されており、この操作では削除されません。</p>
+    </div>
+  </section>
+
+  <!-- 設定 -->
+  <section id="settings" class="screen">
+    <div class="screen-head">
+      <button class="back-button" id="settingsBackBtn" type="button">←</button>
+      <div class="screen-head-title">設定</div>
+      <div></div>
+    </div>
+
+    <div class="settings-panel user-profile-settings-panel">
+      <h3>👤 ユーザー設定</h3>
+      <p id="settingsUserProfileSummary" class="settings-sub">記録に表示する名前を設定できます。</p>
+      <p class="settings-sub">ここで設定した表示名・管理番号は、新しいトレーニング記録とExcel出力に自動で反映されます。</p>
+      <button id="editUserProfileBtn" class="secondary-button" type="button">ユーザー設定を編集</button>
+    </div>
+
+    <div class="settings-panel">
+      <h3>🎤 マイク</h3>
+      <p id="micPermissionStatus" class="settings-status">確認しています…</p>
+      <button id="micPermissionBtn" class="primary-button" type="button">マイクを許可・テストする</button>
+      <button id="micOpenSettingsBtn" class="secondary-button" type="button">マイクが使えないとき</button>
+      <p id="micBrowserHelp" class="settings-sub hidden">GitHub PagesのHTTPSで開き、アドレスバーのサイト設定からマイクを許可してください。音声認識は対応ブラウザが必要です。音声認識の方式によっては、音声がブラウザの認識サービスで処理される場合があります。</p>
+    </div>
+
+    <div class="settings-panel">
+      <h3>🔊 音量</h3>
+      <div class="range-row"><input id="masterVolume" type="range" min="0" max="100" step="1" value="60"><output id="volumeValue">60%</output></div>
+      <button id="testSoundBtn" class="outline-button" type="button">音を試す</button>
+    </div>
+
+    <div class="settings-panel">
+      <h3>🎨 画面の色</h3>
+      <p class="settings-sub">見やすい色を選べます。</p>
+      <div class="theme-choices">
+        <button type="button" class="theme-choice blue" id="themeBlue"><span></span>青</button>
+        <button type="button" class="theme-choice red" id="themeRed"><span></span>赤</button>
+        <button type="button" class="theme-choice yellow" id="themeYellow"><span></span>黄色</button>
+      </div>
+    </div>
+
+    <div class="settings-panel">
+      <h3>♫ 音楽</h3>
+      <label class="switch-row"><span>トレーニング中に音楽を流す</span><input id="musicOn" type="checkbox" checked></label>
+    </div>
+
+    <div class="settings-panel">
+      <h3>🧠 会話・AI</h3>
+      <p class="settings-sub">ジャンル選択の「日常会話・コミュニケーション」からAI会話クイズを選べます。</p>
+    </div>
+
+    <div class="settings-panel">
+      <h3>⚙️ 練習の設定</h3>
+      <label class="setting-select-row">問題数<select id="questionCount"><option value="5">5問</option><option value="10" selected>10問</option><option value="15">15問</option><option value="20">20問</option></select></label>
+      <label class="switch-row"><span>ヒントを使う</span><input id="hintOn" type="checkbox" checked></label>
+      <label class="switch-row"><span>音声を使う</span><input id="voiceOn" type="checkbox" checked></label>
+    </div>
+
+    <div class="settings-panel about-panel">
+      <h3>ことばクエスト 開発版</h3>
+      <p>制作：エジソン・キッチン</p>
+      <p>端末内に記録を保存します。</p>
+      <p class="credits-line">効果音：効果音ラボ　／　BGM：甘茶の音楽工房</p>
+    </div>
+  </section>
+
+  <audio id="bgmAudio" preload="auto" loop playsinline src="BGM/seishishitauchu.mp3"></audio>
+
+</main>
+<script src="encoding-safe.js"></script>
+<script src="android-bridge-android.js?v=beta84-ink"></script>
+<script src="daily-streak.js?v=108"></script>
+<script src="event-message-sound.js?v=89"></script>
+<script src="offline-conversation-engine.js?v=91"></script>
+<script src="app.js?v=beta85-scene-quiz"></script>
+<script src="user-profile.js?v=69"></script>
+<script src="aphasia-modes.js?v=beta85-scene-quiz"></script>
+<script src="generative-ai-chat.js?v=104"></script>
+<script src="ai-download-gate.js?v=99"></script>
+<script src="app-ui.js?v=beta3"></script>
+<script src="community-board.js"></script>
+<script src="reading-memory-mode.js?v=104"></script>
+<script src="ocr/browser-japanese-ocr.js?v=beta86-japanese-ocr"></script>
+<script src="v47-improvements.js?v=beta86-japanese-ocr"></script>
+<script src="v57-task-rebuild.js?v=beta8-fixes"></script>
+<script src="pronunciation-training.js?v=104"></script>
+<script>
+(function(){
+  'use strict';
+  var INTRO_KEY = 'kotobaquest_web_intro_seen_v1';
+  function boot(){
+    // 初回アクセス時だけロゴ→会話イベントを表示します。
+    // #title / #home / #records / #community が付いた戻り先では再生しません。
+    var hasTarget = !!window.location.hash;
+    var seen = false;
+    try { seen = sessionStorage.getItem(INTRO_KEY) === '1'; } catch(e) { seen = true; }
+    if (!hasTarget && !seen) {
+      try { sessionStorage.setItem(INTRO_KEY, '1'); } catch(e) {}
+      window.location.replace('logo.html');
+      return;
+    }
+    var printDrillBtn = document.getElementById('titlePrintDrillBtn');
+    if (printDrillBtn && !printDrillBtn.dataset.bound) { printDrillBtn.dataset.bound = '1'; printDrillBtn.addEventListener('click', function(){ window.location.href = 'print-drills.html'; }); }
+    try { if (typeof renderCategories === 'function') renderCategories(); } catch(e) {}
+    try { if (window.__webAppUI && window.__webAppUI.boot) window.__webAppUI.boot(); } catch(e) {}
+    // 外部ゲームから #home で戻った場合は、ロゴやタイトルを経由せずジャンル選択を表示。
+    if (window.location.hash === '#home') { try { if (typeof show === 'function') show('home'); } catch(e) {} }
+    // 初回起動時は、ロゴと会話イベントのあとにユーザー設定を表示します。
+    var needsProfile = false;
+    try {
+      if (window.KotobaQuestUserProfile) {
+        window.KotobaQuestUserProfile.refreshSummaries();
+        needsProfile = !window.KotobaQuestUserProfile.hasProfile();
+        if (needsProfile) window.KotobaQuestUserProfile.openSetup('first');
+      }
+    } catch(e) {}
+    if (!needsProfile && window.KotobaAIDownloadGate) window.KotobaAIDownloadGate.maybeShow();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<script>
+// Browser PWA install shortcut. Never show this inside the Android WebView.
+(function(){
+  var installBtn=document.getElementById('installWebAppBtn');
+  var installMessage=document.getElementById('installWebAppMessage');
+  if (!installBtn || window.KotobaNativeBridge) return;
+  if (location.protocol!=='https:' && location.hostname!=='localhost') return;
+  var pendingPrompt=null;
+  if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return;
+  installBtn.hidden=false;
+  window.addEventListener('beforeinstallprompt',function(event){event.preventDefault();pendingPrompt=event;});
+  window.addEventListener('appinstalled',function(){pendingPrompt=null;installBtn.hidden=true;installMessage.hidden=true;});
+  installBtn.addEventListener('click',async function(){
+    if(pendingPrompt){
+      var prompt=pendingPrompt;pendingPrompt=null;
+      try{await prompt.prompt();await prompt.userChoice;}catch(e){console.warn('インストール画面を開けませんでした',e);}
+      return;
+    }
+    var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent||'');
+    installMessage.textContent=isIOS?'ブラウザの「共有」→「ホーム画面に追加」を押してください。':'ブラウザのメニュー（⋮）→「アプリをインストール」または「ホーム画面に追加」を押してください。';
+    installMessage.hidden=false;
+  });
+})();
+</script>
+<script>
+if (!window.KotobaNativeBridge && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('service-worker.js').catch(function(e){ console.warn('オフライン画面用キャッシュを登録できませんでした', e); });
+}
+</script>
+</body>
+</html>
